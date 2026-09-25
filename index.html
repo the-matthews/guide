@@ -1,0 +1,1613 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Matthews Guide</title>
+<meta name="description" content="What's on at the Matthews Opera House &amp; Arts Center in Spearfish, South Dakota: tonight, this weekend and the months ahead, straight from our calendar.">
+<meta name="theme-color" content="#ffffff">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Matthews Guide">
+<meta property="og:description" content="What's on at the Matthews Opera House &amp; Arts Center in Spearfish, South Dakota: tonight, this weekend and the months ahead, straight from our calendar.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://guide.matthewsopera.com/">
+<meta property="og:url" content="https://guide.matthewsopera.com/">
+<meta property="og:image" content="https://guide.matthewsopera.com/share.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Matthews Guide: what's on at the Matthews Opera House, with the painted drop above the stage.">
+<link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="The Matthews">
+<link rel="preconnect" href="https://use.typekit.net" crossorigin>
+<link rel="preconnect" href="https://www.matthewsopera.com" crossorigin>
+<link rel="stylesheet" href="https://use.typekit.net/yvf0sov.css">
+<style>
+/* The Matthews Guide: the look.
+
+   DESIGN.md, "The House Itself", set for a phone held in one hand. The ten
+   colour tokens and nothing else. Square corners, flat surfaces, no tinted
+   cards, no accent strips. House Red only on things you press. Type is
+   larken at 900 and 100 over pt-sans, from the site's own Adobe Fonts kit.
+   Sizes are the site's own, measured on matthewsopera.com at phone width:
+   body 17px, headings 25px, labels 16px, the events list's day number 28px,
+   the numbers band 40px, the button 16px.
+
+   build.mjs lints this file and refuses to build if it strays: any colour
+   that isn't a token, a shadow, a rounded corner, a gradient, a strip.     */
+
+:root {
+  --indigo: #45496F;   /* Opera House Indigo: identity */
+  --violet: #72729D;   /* Curtain Violet: state, never text on a tint */
+  --red: #AA1616;      /* House Red: press this */
+  --green: #204E09;    /* Stage Green: inline links */
+  --ink: #333333;
+  --ink-2: #575760;
+  --rule: #b2b2be;     /* dividers only, never text */
+  --paper: #ffffff;
+  --paper-2: #f7f8f9;
+  --grey: #f0f0f0;     /* Section Grey, the one tint a band may take */
+
+  --f-display: larken, Georgia, serif;
+  --f-body: pt-sans, Helvetica, Arial, sans-serif;
+  --f-label: pt-sans-narrow, "Arial Narrow", Helvetica, Arial, sans-serif;
+
+  --gutter: 20px;      /* the site's blocks run at 90% width on a phone */
+  --col: 47.938rem;
+  --band: 3rem;        /* 5.313rem on desktop, 4rem tablet, 3rem phone */
+  --head-gap: 24px;
+  --bar: 106px;        /* the sticky header; guide.js measures the real one */
+
+  color-scheme: light;
+}
+@media (min-width: 48rem) { :root { --gutter: 30px; --band: 4rem; --head-gap: 32px; } }
+@media (min-width: 64rem) { :root { --gutter: 40px; --band: 5.313rem; --head-gap: 45px; } }
+
+/* ------------------------------------------------------------------ base --- */
+
+*, *::before, *::after { box-sizing: border-box; border-radius: 0; }
+
+html {
+  background: var(--paper);
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--bar) + 8px);
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 17px/1.45 var(--f-body);
+  overflow-x: clip; /* not hidden: hidden makes body a scroller and breaks the sticky bar */
+  -webkit-tap-highlight-color: transparent;
+}
+html.locked, html.locked body { overflow: hidden; }
+
+img { display: block; max-width: 100%; }
+a { color: var(--green); text-underline-offset: 2px; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0; cursor: pointer; text-align: inherit; }
+h1, h2, h3, p, figure, ol, ul, dl, dd { margin: 0; }
+ol, ul { list-style: none; padding: 0; }
+[hidden] { display: none !important; }
+:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; }
+
+.vh {
+  position: absolute !important;
+  width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
+.skip { position: absolute; left: 8px; top: -80px; z-index: 100; background: var(--paper); color: var(--ink); padding: 12px 16px; }
+.skip:focus { top: 8px; }
+
+.shell { width: 100%; max-width: calc(var(--col) + 2 * var(--gutter)); margin: 0 auto; padding: 0 var(--gutter); }
+
+/* ------------------------------------------------------------------ type --- */
+
+.headline { font: 900 25px/1.2 var(--f-display); text-transform: uppercase; }
+.title { font: 100 25px/1.2 var(--f-display); }
+.label { font: 700 16px/1 var(--f-label); text-transform: uppercase; }
+.muted { color: var(--ink-2); }
+.lede { color: var(--ink-2); margin-top: 10px; max-width: 34em; }
+.lede-title { margin-top: 10px; }
+
+/* --------------------------------------------------------------- buttons --- */
+
+/* The theme's .readon: House Red, larken 900, square, and on hover a chevron
+   slides in from the right as the button grows toward it. */
+.readon {
+  position: relative;
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 44px;
+  padding: 13px 20px;
+  background: var(--red);
+  color: var(--paper);
+  border: 1px solid var(--paper);
+  font: 900 16px/1 var(--f-display);
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: padding-right 0.2s ease;
+}
+.readon::after {
+  content: "";
+  position: absolute; right: 24px; top: 50%;
+  width: 7px; height: 7px;
+  border: solid currentColor; border-width: 2px 2px 0 0;
+  transform: translateY(-50%) rotate(45deg);
+  opacity: 0;
+  transition: opacity 0.2s ease, right 0.2s ease;
+}
+@media (hover: hover) {
+  .readon:hover { padding-right: 2.5rem; }
+  .readon:hover::after { opacity: 1; right: 17px; }
+}
+
+/* The quieter companions: Save, Add to calendar, Share. Ink on paper, a
+   functional 1px edge so a thumb can find them, the label face. */
+.line {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  min-height: 44px;
+  padding: 12px 14px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--ink-2);
+  font: 700 16px/1 var(--f-label);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.line.is-on { background: var(--indigo); border-color: var(--indigo); color: var(--paper); }
+
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.actions-2 { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+
+/* ------------------------------------------------------------------- bar --- */
+
+.bar {
+  position: sticky; top: 0; z-index: 20;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+  padding-top: env(safe-area-inset-top);
+}
+.bar-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 58px; }
+.brand { display: inline-flex; align-items: flex-end; gap: 9px; color: var(--indigo); text-decoration: none; padding: 8px 0; }
+.brand svg { display: block; height: 34px; width: auto; }
+.brand-guide { color: var(--indigo); padding-bottom: 3px; }
+.bar-share { padding: 14px 0 14px 14px; color: var(--ink); }
+
+.nav { overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.nav::-webkit-scrollbar { display: none; }
+.nav-row {
+  display: flex; gap: 22px;
+  width: max-content;
+  padding: 0 var(--gutter);
+}
+@media (min-width: 48rem) { .nav-row { margin: 0 auto; padding: 0 max(var(--gutter), calc((100vw - var(--col)) / 2)); width: auto; min-width: max-content; } }
+.nav a { display: block; padding: 11px 0 14px; color: var(--ink); text-decoration: none; white-space: nowrap; }
+.nav a[aria-current="true"] { color: var(--red); }
+.nav-count:not(:empty)::before { content: " · "; }
+
+/* ----------------------------------------------------------------- bands --- */
+
+.band { padding: var(--band) 0; }
+#coming-up { padding-top: calc(var(--band) * 0.6); }
+.band-grey { background: var(--grey); }
+.section-head { margin-bottom: var(--head-gap); }
+.when-note:not(:empty) { margin-top: 10px; }
+.sub { margin-top: calc(var(--band) * 0.75); }
+.sub .title { margin-bottom: 14px; }
+#saved .section-head { margin-bottom: 0; }
+#saved-list:not(:empty) { margin-top: var(--head-gap); }
+
+/* ------------------------------------------------------------ the frames --- */
+
+/* Event photos are 16:9 and cropped into the frame, never stretched. */
+.frame { display: block; position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: var(--grey); }
+.frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+/* Full-bleed on a phone, to the column on anything wider. */
+.bleed { width: 100%; max-width: calc(var(--col) + 2 * var(--gutter)); margin: 0 auto; }
+@media (min-width: 48rem) { .bleed { padding: 0 var(--gutter); } }
+
+/* ------------------------------------------------------------- the card --- */
+
+.card-body { padding-top: 18px; }
+.card-title a { color: inherit; text-decoration: none; }
+.card-title a:hover { text-decoration: underline; text-decoration-thickness: 2px; }
+.when { margin-top: 12px; font-weight: 700; }
+.price { margin-top: 2px; }
+.place { margin-top: 2px; color: var(--ink-2); }
+.blurb { margin-top: 14px; max-width: 34em; }
+.more { margin-top: 16px; }
+
+.dates { margin-top: 26px; }
+.dates h3 { margin-bottom: 8px; color: var(--ink-2); }
+
+/* ------------------------------------------------------------------ rows --- */
+/* The site's own events list, tightened: the weekday over the day number,
+   then the title and the facts, then a small 16:9 frame. */
+
+.rows { border-top: 1px solid var(--rule); }
+.row { border-bottom: 1px solid var(--rule); }
+.row-hit {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) 88px;
+  gap: 14px;
+  align-items: start;
+  padding: 14px 0;
+  color: inherit;
+  text-decoration: none;
+}
+.row-date { display: flex; flex-direction: column; align-items: center; gap: 5px; padding-top: 3px; }
+.daynum { font: 900 28px/1 var(--f-display); }
+.row-title { display: block; font-weight: 700; line-height: 1.25; }
+.row-meta { display: block; margin-top: 4px; color: var(--ink-2); line-height: 1.3; }
+.row-thumb { width: 88px; }
+.row-hit:hover .row-title { text-decoration: underline; }
+.star { margin-left: 6px; font-weight: 400; }
+.row-hit.is-plain { grid-template-columns: 42px minmax(0, 1fr); }
+
+@media (min-width: 48rem) {
+  .row-hit { grid-template-columns: 52px minmax(0, 1fr) 160px; gap: 20px; }
+  .row-thumb { width: 160px; }
+}
+
+/* A date strip under a card: each of a run's other dates, tappable. */
+.date-rows { border-top: 1px solid var(--rule); }
+.date-rows a {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  min-height: 48px; padding: 10px 0;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink); text-decoration: none;
+}
+.date-rows a:hover span:first-child { text-decoration: underline; }
+.arrow { color: var(--ink-2); }
+
+/* -------------------------------------------------------------- calendar --- */
+
+.chips {
+  display: flex; gap: 8px;
+  overflow-x: auto; scrollbar-width: none;
+  margin: 0 calc(-1 * var(--gutter)) 12px;
+  padding: 0 var(--gutter) 2px;
+}
+.chips::-webkit-scrollbar { display: none; }
+/* The site's own category buttons: square, a Rule Grey edge, pt-sans. */
+.chip {
+  flex: none;
+  min-height: 44px;
+  padding: 10px 14px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  font: 400 16px/1.2 var(--f-body);
+  white-space: nowrap;
+}
+.chip[aria-pressed="true"] { background: var(--indigo); border-color: var(--indigo); color: var(--paper); }
+.count { min-height: 16px; margin-bottom: 18px; }
+
+.month + .month { margin-top: 40px; }
+.month-name { margin-bottom: 12px; }
+.empty { color: var(--ink-2); }
+
+/* -------------------------------------------------------------- visit --- */
+
+.facts { border-top: 1px solid var(--rule); }
+.fact { padding: 14px 0 16px; border-bottom: 1px solid var(--rule); }
+.fact dt { color: var(--ink-2); margin-bottom: 7px; }
+.fact dd + dd { margin-top: 6px; }
+@media (min-width: 48rem) {
+  .fact { display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 20px; }
+  .fact dt { margin: 3px 0 0; }
+  .fact dd + dd { grid-column: 2; }
+}
+
+/* -------------------------------------------------------------- about --- */
+
+.about { padding-bottom: 0; }
+.about-photo { aspect-ratio: 2.11 / 1; }
+.about-body { padding-top: var(--head-gap); }
+.about-body .headline { margin-bottom: 18px; }
+.about-body p + p { margin-top: 14px; }
+.about-body p { max-width: 34em; }
+
+/* The acf/numbers band: Opera House Indigo, white type, once on the page. */
+.numbers { margin-top: var(--band); padding: var(--band) 0; background: var(--indigo); color: var(--paper); }
+.numbers-head .title, .numbers-head .headline { display: block; color: var(--paper); }
+.numbers ol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px 20px; margin-top: 30px; }
+@media (min-width: 48rem) { .numbers ol { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.num { display: block; font: 900 40px/1.1 var(--f-display); }
+.num-label { display: block; margin-top: 6px; }
+.about-more { padding-top: var(--band); }
+
+/* -------------------------------------------------------- get involved --- */
+
+.ways { border-top: 1px solid var(--rule); }
+.ways a {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px; align-items: start;
+  padding: 14px 0 16px;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink); text-decoration: none;
+}
+.way-name { display: block; font-weight: 700; }
+.way-text { display: block; margin-top: 3px; color: var(--ink-2); }
+.ways a:hover .way-name { text-decoration: underline; }
+.give { margin-top: var(--band); }
+.give .title { max-width: 18em; }
+.give p { margin-top: 12px; max-width: 34em; }
+.partners { margin-top: var(--band); }
+
+/* ---------------------------------------------------------------- footer --- */
+
+.foot { background: var(--grey); padding: 2.5rem 0 calc(2.5rem + env(safe-area-inset-bottom)); }
+.foot-name { font-weight: 700; }
+.foot p + p { margin-top: 4px; }
+.nowrap { white-space: nowrap; }
+.foot-links { display: flex; flex-wrap: wrap; gap: 6px 20px; margin-top: 18px; }
+.foot-links a { display: inline-block; padding: 8px 0; }
+.foot-built { margin-top: 18px; color: var(--ink-2); }
+
+/* ----------------------------------------------------------------- sheet --- */
+
+.sheet {
+  position: fixed; inset: 0; z-index: 40;
+  background: var(--paper);
+  overflow-y: auto; overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: calc(var(--band) + env(safe-area-inset-bottom));
+}
+.sheet-bar {
+  position: sticky; top: 0; z-index: 2;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+  padding-top: env(safe-area-inset-top);
+}
+.sheet-bar .shell { display: flex; align-items: center; justify-content: space-between; min-height: 56px; }
+.sheet-bar button { padding: 14px 0; color: var(--ink); }
+.sheet-bar [data-close] { padding-right: 14px; }
+.sheet-bar [data-share-event] { padding-left: 14px; }
+.sheet .card { padding-top: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .sheet.is-opening { animation: sheet-in 0.22s cubic-bezier(0.16, 1, 0.3, 1); }
+  @keyframes sheet-in { from { transform: translateY(18px); opacity: 0; } to { transform: none; opacity: 1; } }
+}
+
+/* ----------------------------------------------------------------- toast --- */
+
+.toast {
+  position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom)); z-index: 60;
+  max-width: calc(100% - 2 * var(--gutter));
+  padding: 12px 16px;
+  background: var(--ink); color: var(--paper);
+  transform: translate(-50%, 12px);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+.noscript { padding-top: 2rem; padding-bottom: 2rem; }
+
+</style>
+</head>
+<body>
+<a class="skip" href="#calendar">Skip to the calendar</a>
+
+<!-- ================================================================ bar -->
+<header class="bar" id="top">
+  <div class="shell bar-row">
+    <a class="brand" href="#coming-up" aria-label="The Matthews Guide, back to the top"><svg role="img" aria-label="The Matthews" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 149 49" fill="none">
+  <g clip-path="url(#clip0_69_56)">
+    <path d="M131.105 34.1196L131.274 34.1143L135.267 8.59055L137.8 8.93791L131.103 49L126.681 21.1662L126.529 21.0879L121.561 48.7799L115.477 6.64862C116.203 6.7468 116.953 6.7261 117.687 6.78114C117.81 6.79038 118.248 6.82032 118.272 6.89692L121.695 33.6332L121.845 33.6376L126.682 5.76857L131.104 34.1201L131.105 34.1196Z" fill="#45496F"></path>
+    <path d="M147.562 14.0443C146.37 12.6272 144.136 12.356 143.079 14.0919C141.975 15.9053 142.132 19.5901 142.663 21.5911C143.957 26.4703 147.627 30.3626 148.687 35.388C149.562 39.54 148.855 47.3966 143.34 47.7691C142.237 47.8435 140.849 47.7902 140.033 46.9528V43.8491C140.833 44.6574 141.785 44.8718 142.895 44.7243C145.662 44.3567 146.238 41.4894 146.339 39.1186C146.621 32.4595 141.714 28.0011 140.168 21.8992C139.39 18.8294 139.345 13.5345 141.587 11.0498C143.155 9.31256 145.97 9.44639 147.562 11.0722V14.0439V14.0443Z" fill="#45496F"></path>
+    <path d="M102.083 6.34V46.7107H99.4781L99.4124 46.6447V36.497L94.4224 36.541V46.7107L91.7956 46.7552L91.7518 6.60415L94.3786 6.5161L94.4219 34.076L99.4124 33.9875V6.38403L102.083 6.34Z" fill="#45496F"></path>
+    <path d="M106.722 6.38403L113.376 6.56013L113.332 9.77438L109.349 9.64186V34.0316L113.245 34.1196V36.541L109.349 36.497V43.4969L113.682 43.5409V46.7547L106.722 46.7107V6.38403Z" fill="#45496F"></path>
+    <path d="M89.1259 9.95004L85.7996 10.1706L85.8867 46.8432L83.3037 46.8873L83.2162 10.3467L79.8024 10.6544V7.55069L89.1259 6.73623V9.95004Z" fill="#45496F"></path>
+    <path d="M79.1895 7.5727V10.6764L75.9062 11.0507L75.9504 47.0633L73.4317 47.1399L73.3678 47.0409L73.3236 11.3588L69.9098 11.7991V8.71734L79.1895 7.5727Z" fill="#45496F"></path>
+    <path d="M69.0344 47.283L66.4273 47.3297L65.0515 37.8177L60.5036 38.1312L59.123 47.6388L56.603 47.7677L62.8629 8.14546L69.0344 47.2835V47.283ZM62.7535 23.0694L60.8717 35.8357L64.6952 35.4589C64.075 31.3681 63.4727 27.2738 62.8599 23.1817L62.7535 23.0694Z" fill="#45496F"></path>
+    <path d="M46.3602 0.132515L43.0554 35.6169L54.852 0.132515H59.6232C58.1866 7.55245 56.9606 15.0283 55.9525 22.5253C54.9536 29.954 54.1241 37.4638 54.1937 44.9735L54.3706 47.6793H50.1027C49.9732 47.4222 50.052 47.0339 50.0388 46.731C49.8528 42.4636 50.161 38.1298 50.5624 33.8779C51.2448 26.6539 52.3947 19.4836 53.5384 12.3278L42.2894 46.8432H38.4374L41.4573 13.1203L39.6849 19.5034C37.9423 25.3354 36.1739 31.1871 33.6601 36.7329C32.5391 39.2063 31.2018 41.8477 29.5498 44.0014C28.1469 45.8302 26.2625 47.8162 23.7741 47.7669L23.2479 42.9246C25.5696 42.977 27.3297 40.8611 28.5365 39.1085C30.6354 36.0607 32.2283 32.1724 33.5673 28.7156C37.1417 19.492 39.5234 9.79771 41.6328 0.132515H46.3602Z" fill="#45496F"></path>
+    <path d="M24.4959 48.2956L24.4513 48.2071C24.896 47.9619 25.4292 47.9755 25.9089 47.8237C29.3477 46.7358 32.4091 40.6547 33.8488 37.539C35.6662 33.6063 37.1287 29.5058 38.4926 25.3922C39.0406 23.7395 39.5042 22.052 40.1223 20.427C40.1761 20.4284 40.1087 21.4035 40.0999 21.5057C39.7891 25.1531 38.2724 29.0678 36.9387 32.4581C35.7459 35.4897 34.4402 38.5498 32.7821 41.3529C31.7525 43.0928 30.54 44.7186 29.44 46.4003C29.1897 46.7829 26.7528 48.2952 26.3339 48.2952H24.4955L24.4959 48.2956Z" fill="#45496F"></path>
+    <path d="M50.4749 48.1195H54.3049C54.5269 48.1195 54.786 47.6454 54.8083 47.4371C54.9199 46.3995 54.6455 45.0413 54.5912 43.9574C54.361 39.3484 54.87 34.6743 55.3826 30.0971C56.5133 20 58.1328 9.96677 60.0396 0C60.5583 0.158489 60.6856 0.717163 60.6248 1.20584C58.0772 14.8588 55.7963 28.7085 55.3791 42.6402C55.3568 43.3811 55.2951 44.1379 55.3318 44.8854C55.3883 46.0385 56.1731 48.2525 54.431 48.4664C53.5647 48.5725 52.1513 48.5752 51.2851 48.4713C51.0286 48.4404 50.5436 48.4127 50.4749 48.1195Z" fill="#45496F"></path>
+    <path d="M51.4374 20.5164L50.6622 25.3495L43.698 46.7411C43.4555 47.4244 42.9399 47.5947 42.2693 47.6374C41.7059 47.6735 39.5672 47.6969 39.1509 47.4684C39.0813 47.4301 38.9925 47.3781 39.0065 47.2839C39.119 47.2628 39.2262 47.2205 39.3391 47.2003C40.2023 47.0462 41.1968 47.3187 42.0916 47.239C42.3594 47.2152 42.6203 47.1501 42.7604 46.8991L51.2304 20.7269L51.437 20.5169L51.4374 20.5164Z" fill="#45496F"></path>
+    <path d="M25.5683 10.0821L25.5745 10.6483C26.8662 11.0176 26.3878 12.7527 25.9999 13.6635C25.1845 15.579 23.5763 17.0772 22.6789 18.9522L23.6283 18.1021C24.2009 17.635 25.4318 17.3871 25.9365 18.0537C26.6635 19.0139 25.3 20.9809 25.2597 22.1202C25.2309 22.9356 25.8327 22.6851 26.2451 22.3192C26.5143 22.0806 27.2313 21.1332 27.3709 20.8101C27.4615 20.6005 27.5048 20.3003 27.5924 20.0643C28.1155 18.6537 29.486 17.3264 31.0924 17.7983C32.118 18.0999 32.2191 19.1142 31.8646 20.0027C31.4514 21.0386 30.101 21.8191 29.0255 21.9243C29.233 22.7771 30.0822 22.7269 30.7768 22.5627C31.7446 22.3338 32.6971 21.5233 33.1405 20.6472C33.1786 20.6177 33.9039 21.0205 34.0033 21.0777C34.0348 21.0958 34.0843 21.0689 34.0554 21.1486C33.9858 21.3397 33.4334 22.0229 33.2701 22.2087C32.6385 22.9281 31.8387 23.533 30.9073 23.7945C29.5958 24.1634 27.8922 24.0226 27.3836 22.5407C26.8408 23.1139 26.1032 23.8465 25.2777 23.9437C23.6227 24.1392 23.4239 22.9092 23.7146 21.5792C23.8809 20.818 24.3939 19.882 24.4679 19.1675C24.4841 19.0125 24.5174 18.7858 24.3537 18.7158C24.0718 18.6401 23.5566 19.19 23.3771 19.3907C22.2513 20.6503 21.6109 22.3545 20.9928 23.9046H19.3951C20.3651 20.7634 21.2813 17.5905 22.4145 14.5044C22.7192 13.675 23.0322 12.7672 23.4743 12.0042C23.5771 11.8264 23.8962 11.4645 23.9466 11.3346C23.9763 11.2585 23.9277 11.2752 23.8822 11.269C23.4432 11.21 22.8159 11.2818 22.3476 11.2708C22.2022 11.2673 21.515 11.1546 21.4472 11.251L17.4249 23.8601H15.674L19.6582 11.2034L15.6302 11.0269V10.1464L15.6959 10.0803H25.5666L25.5683 10.0821ZM22.8111 17.5223L24.3611 15.1414C24.8338 14.364 25.4699 13.3052 25.5631 12.3881C25.5784 12.2371 25.6252 11.7159 25.4502 11.6727C25.3876 11.6569 25.3407 11.6881 25.2899 11.7167C25.0374 11.8616 24.5226 12.9521 24.3786 13.266C23.7492 14.6369 23.2834 16.0911 22.8111 17.5223ZM29.0268 21.0003C29.7035 20.8259 30.4547 20.4482 30.7847 19.7971C30.9515 19.4682 31.1454 18.5925 30.5807 18.5859C29.7328 18.5758 29.0631 20.2813 29.0268 21.0003Z" fill="#45496F"></path>
+    <path d="M39.3563 7.08842C37.0337 5.1619 34.3522 3.66374 31.4676 2.76255C21.9012 -0.227169 11.5197 3.34192 5.79116 11.5208C2.53975 16.1632 1.05236 21.9406 1.74746 27.6154C1.31105 28.1811 1.04579 28.8331 0.750767 29.4763C0.730631 29.5199 0.725379 29.5798 0.662346 29.5851C0.53847 28.8996 0.378701 28.2207 0.275398 27.5304C-2.21306 10.9525 12.5671 -2.89815 28.8518 0.814457C32.8079 1.71652 36.5063 3.71217 39.4815 6.45931L39.3563 7.08842Z" fill="#45496F"></path>
+    <path d="M39.0498 8.36515C36.9557 6.79258 34.6292 5.52731 32.1241 4.74367C23.244 1.96483 13.6114 5.10423 8.04228 12.5083C5.19313 16.2962 3.62564 20.9531 3.58669 25.725C3.25795 26.0288 2.90427 26.2991 2.59918 26.6253C2.56985 26.6566 2.60925 26.7279 2.52214 26.6367C2.52083 26.3405 2.46524 26.0235 2.45517 25.7356C1.97017 11.6692 14.2628 0.684586 28.1216 2.86953C32.1613 3.50657 36.0312 5.33448 39.0975 8.03408L39.0493 8.36515H39.0498Z" fill="#45496F"></path>
+    <path d="M38.7435 9.68589C38.6966 9.73256 37.7647 9.04005 37.6456 8.96344C28.5033 3.08614 16.4493 5.19184 9.83658 13.785C7.41859 16.9271 5.94084 20.7229 5.55651 24.6904C5.24048 24.7974 4.917 24.9365 4.61541 25.0871C4.49109 25.1492 4.3983 25.2839 4.25122 25.2707C4.41318 18.1448 8.20956 11.5301 14.1473 7.73075C21.41 3.08394 30.8662 3.31903 37.882 8.32949C38.0492 8.44879 38.7544 8.93835 38.8358 9.04621C38.9172 9.15407 38.7128 9.52212 38.7435 9.68589Z" fill="#45496F"></path>
+    <path d="M8.21297 39.6698C12.3125 39.6698 15.6359 36.3273 15.6359 32.2041C15.6359 28.0809 12.3125 24.7384 8.21297 24.7384C4.1134 24.7384 0.790039 28.0809 0.790039 32.2041C0.790039 36.3273 4.1134 39.6698 8.21297 39.6698Z" fill="#45496F"></path>
+    <path d="M12.174 41.9565C12.1561 42.023 12.1915 42.0296 12.2169 42.0665C12.3347 42.2374 12.6813 42.5094 12.8534 42.6591C13.7949 43.4793 14.8459 44.1766 15.9087 44.8251L17.2512 45.5656C17.0669 45.5322 16.8686 45.4322 16.6966 45.3539C14.8914 44.5306 13.2193 43.4172 11.7048 42.1387L10.9484 42.3091L11.0797 42.4843C10.9567 42.4909 10.9217 42.3404 10.7974 42.3285C10.645 42.3144 10.2397 42.4187 10.0506 42.4399C9.98889 42.4469 9.63215 42.3936 9.67942 42.5059C10.9186 43.5506 12.2541 44.4879 13.6767 45.2658C14.0969 45.4956 14.5386 45.6902 14.9649 45.9081C15.0591 45.9561 15.07 45.9641 14.9562 45.9614C13.2464 45.3028 11.6413 44.406 10.1294 43.375C9.8033 43.1526 9.06442 42.4914 8.73437 42.4447C8.49713 42.4113 8.20341 42.4297 7.95566 42.3914C4.47882 41.8557 1.55001 39.4334 0.575195 36.0136L1.1705 37.2855C4.68586 43.5075 13.7538 43.3054 16.8362 36.762C18.5827 33.0542 17.6114 28.8873 14.5828 26.2176C14.4764 26.1239 14.3337 26.0499 14.2313 25.9548C14.1748 25.902 14.1582 25.8786 14.2532 25.8888C14.5907 26.1309 14.9308 26.3796 15.2394 26.6579C17.5195 28.7147 18.7246 32.0025 18.1074 35.0468C17.4552 38.2646 15.2989 40.9083 12.1749 41.9578L12.174 41.9565Z" fill="#45496F"></path>
+    <path d="M0.74939 34.9125C0.8435 34.8945 0.850504 34.957 0.882895 35.0199C0.997579 35.2427 1.079 35.5359 1.1928 35.7648C3.30045 39.9978 8.51768 41.507 12.5636 39.0253C16.7027 36.4868 17.6324 30.7614 14.472 27.0316C14.1801 26.6874 13.8343 26.395 13.5305 26.064C13.7354 26.1459 13.9573 26.3497 14.1227 26.5025C18.7486 30.7786 17.0275 38.5349 11.0263 40.3839C6.64597 41.7337 2.1059 39.2476 0.74939 34.9125Z" fill="#45496F"></path>
+    <path d="M14.947 38.9337C12.0309 41.8601 7.64928 42.3958 4.16763 40.081C3.2681 39.4832 2.05823 38.2976 1.5531 37.3396C1.52115 37.2793 1.47518 37.2383 1.49401 37.1573C1.7225 37.3163 1.83149 37.6024 2.00045 37.8142C4.56946 41.028 9.07364 41.9411 12.6849 39.9388C15.7144 38.2588 17.4298 34.8478 16.94 31.3738C16.7373 29.9355 16.209 28.7799 15.3913 27.6044C15.3664 27.5687 15.274 27.5186 15.3471 27.4728C15.745 27.895 16.1105 28.4233 16.3836 28.9397C18.1297 32.2362 17.5686 36.3037 14.9466 38.9346L14.947 38.9337Z" fill="#45496F"></path>
+  </g>
+  <defs>
+    <clipPath id="clip0_69_56">
+      <rect width="149" height="49" fill="white"></rect>
+    </clipPath>
+  </defs>
+</svg><span class="brand-guide label" aria-hidden="true">Guide</span></a>
+    <button type="button" class="bar-share label" data-share>Share</button>
+  </div>
+  <nav class="nav" aria-label="Guide sections">
+    <div class="nav-row">
+      <a class="label" href="#coming-up">Coming up</a>
+      <a class="label" href="#calendar">Calendar</a>
+      <a class="label" href="#saved">My Matthews<span class="nav-count" id="nav-count"></span></a>
+      <a class="label" href="#visit">Visit</a>
+      <a class="label" href="#about">About</a>
+      <a class="label" href="#involved">Get involved</a>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+  <h1 class="vh">The Matthews Guide: what's on at the Matthews Opera House & Arts Center</h1>
+
+  <!-- ========================================================== coming up -->
+  <section class="band" id="coming-up" aria-labelledby="coming-title">
+    <div class="shell section-head">
+      <h2 class="title coming-title" id="coming-title">Coming up</h2>
+      <p class="label muted when-note" id="coming-note"></p>
+    </div>
+    <div id="lead"></div>
+    <div id="coming-lists"></div>
+  </section>
+
+  <!-- =========================================================== calendar -->
+  <section class="band" id="calendar" aria-labelledby="calendar-title">
+    <div class="shell">
+      <div class="section-head">
+        <h2 class="headline" id="calendar-title">Calendar</h2>
+        <p class="lede">Everything on our calendar, month by month.</p>
+      </div>
+      <div class="chips" id="chips" role="group" aria-label="Show one kind of event"></div>
+      <p class="label muted count" id="cal-count" aria-live="polite"></p>
+      <div id="months"></div>
+    </div>
+  </section>
+
+  <!-- ======================================================== my matthews -->
+  <section class="band band-grey" id="saved" aria-labelledby="saved-title">
+    <div class="shell">
+      <div class="section-head">
+        <h2 class="headline" id="saved-title">My Matthews</h2>
+        <p class="lede" id="saved-lede">Tap Save on anything and it waits for you here. The list stays on this phone. There's no account and nothing to sign up for.</p>
+      </div>
+      <div id="saved-list"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================== visit -->
+  <section class="band" id="visit" aria-labelledby="visit-title">
+    <div class="shell">
+      <div class="section-head">
+        <h2 class="headline" id="visit-title">Visit</h2>
+      </div>
+      <dl class="facts" id="visit-facts"></dl>
+    </div>
+  </section>
+
+  <!-- ============================================================== about -->
+  <section class="about" id="about" aria-labelledby="about-title"></section>
+
+  <!-- ======================================================= get involved -->
+  <section class="band" id="involved" aria-labelledby="involved-title"></section>
+</main>
+
+<!-- ============================================================= footer -->
+<footer class="foot" id="foot"></footer>
+
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" hidden></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<noscript><p class="shell noscript">The Guide needs JavaScript. Everything in it is also on our calendar at matthewsopera.com/events.</p></noscript>
+
+<script>
+window.GUIDE={"built":"2026-09-25T00:01:30.798Z","feed":"https://www.matthewsopera.com/wp-json/tribe/events/v1/events","events":[{"id":8453,"key":"auditions-nuncrackers","title":"Auditions: Nuncrackers","url":"https://www.matthewsopera.com/event/auditions-nuncrackers/","start":1790726400000,"end":1790733600000,"from":{"key":"2026-09-29","y":2026,"m":9,"d":29,"H":18,"M":0},"to":{"key":"2026-09-29","y":2026,"m":9,"d":29,"H":20,"M":0},"allDay":false,"categories":[{"slug":"auditions","name":"Auditions"},{"slug":"theater","name":"Theater"}],"price":"Free","ticket":{"url":"https://www.matthewsopera.com/event/auditions-nuncrackers/","from":"page"},"blurb":"Auditions for Nuncrackers: The Nunsense Christmas Musical — Tuesday and Wednesday, September 29 and 30, 6 to 8 p.m. Five nuns, one male role and four youth roles. Open to community performers of all experience levels.","image":{"w":1600,"h":900,"src":"https://www.matthewsopera.com/wp-content/uploads/2026/08/Sept-5-12-6PM-1-768x432.png","srcset":"https://www.matthewsopera.com/wp-content/uploads/2026/08/Sept-5-12-6PM-1-300x169.png 300w, https://www.matthewsopera.com/wp-content/uploads/2026/08/Sept-5-12-6PM-1-768x432.png 768w, https://www.matthewsopera.com/wp-content/uploads/2026/08/Sept-5-12-6PM-1-1024x576.png 1024w, https://www.matthewsopera.com/wp-content/uploads/2026/08/Sept-5-12-6PM-1-1536x864.png 1536w, https://www.matthewsopera.com/wp-content/uploads/2026/08/Sept-5-12-6PM-1.png 1600w"},"venue":{"name":"The Matthews Opera House – Theatre","address":"614 Main St","city":"Spearfish","zip":"57783"}},{"id":8454,"key":"auditions-nuncrackers-2","title":"Auditions: Nuncrackers","url":"https://www.matthewsopera.com/event/auditions-nuncrackers-2/","start":1790812800000,"end":1790820000000,"from":{"key":"2026-09-30","y":2026,"m":9,"d":30,"H":18,"M":0},"to":{"key":"2026-09-30","y":2026,"m":9,"d":30,"H":20,"M":0},"allDay":false,"categories":[{"slug":"auditions","name":"Auditions"},{"slug":"theater","name":"Theater"}],"price":"Free","ticket":{"url":"https://www.matthewsopera.com/event/auditions-nuncrackers-2/","from":"page"},"blurb":"Auditions for Nuncrackers: The Nunsense Christmas Musical — Tuesday and Wednesday, September 29 and 30, 6 to 8 p.m. Five nuns, one male role and four youth roles. Open to community performers of all experience levels.","image":{"w":1600,"h":900,"src":"https://www.matthewsopera.com/wp-content/uploads/2026/08/Sept-5-12-6PM-1-768x432.png","srcset":"https://www.matthewsopera.com/wp-content/uploads/2026/08/Sept-5-12-6PM-1-300x169.png 300w, https://www.matthewsopera.com/wp-content/uploads/2026/08/Sept-5-12-6PM-1-768x432.png 768w, https://www.matthewsopera.com/wp-content/uploads/2026/08/Sept-5-12-6PM-1-1024x576.png 1024w, https://www.matthewsopera.com/wp-content/uploads/2026/08/Sept-5-12-6PM-1-1536x864.png 1536w, https://www.matthewsopera.com/wp-content/uploads/2026/08/Sept-5-12-6PM-1.png 1600w"},"venue":{"name":"The Matthews Opera House – Theatre","address":"614 Main St","city":"Spearfish","zip":"57783"}},{"id":8283,"key":"brushes-history-a-plein-air-paint-out","title":"Brushes & History: A Plein Air Paint Out","url":"https://www.matthewsopera.com/event/brushes-history-a-plein-air-paint-out/","start":1791061200000,"end":1791072000000,"from":{"key":"2026-10-03","y":2026,"m":10,"d":3,"H":15,"M":0},"to":{"key":"2026-10-03","y":2026,"m":10,"d":3,"H":18,"M":0},"allDay":false,"categories":[{"slug":"special-events","name":"Special Events"},{"slug":"visual-arts","name":"Visual Arts"}],"price":"$20","ticket":{"url":"https://www.eventbrite.com/e/brushes-history-a-plein-air-paint-out-tickets-1996474033578?aff=guide","from":"description"},"blurb":"Celebrate 150 years of Spearfish history with a plein air paint-out featuring local artists, public voting, prizes, and art sales.","image":{"w":1920,"h":1080,"src":"https://www.matthewsopera.com/wp-content/uploads/2026/08/Brushes-History-1920-x-1080-px-1-768x432.jpg","srcset":"https://www.matthewsopera.com/wp-content/uploads/2026/08/Brushes-History-1920-x-1080-px-1-300x169.jpg 300w, https://www.matthewsopera.com/wp-content/uploads/2026/08/Brushes-History-1920-x-1080-px-1-768x432.jpg 768w, https://www.matthewsopera.com/wp-content/uploads/2026/08/Brushes-History-1920-x-1080-px-1-1024x576.jpg 1024w, https://www.matthewsopera.com/wp-content/uploads/2026/08/Brushes-History-1920-x-1080-px-1-1536x864.jpg 1536w, https://www.matthewsopera.com/wp-content/uploads/2026/08/Brushes-History-1920-x-1080-px-1.jpg 1920w"},"venue":null},{"id":8349,"key":"tayko-jones-album-release-show","title":"Tayko Jones: Album Release Show","url":"https://www.matthewsopera.com/event/tayko-jones-album-release-show/","start":1791594000000,"end":1791601200000,"from":{"key":"2026-10-09","y":2026,"m":10,"d":9,"H":19,"M":0},"to":{"key":"2026-10-09","y":2026,"m":10,"d":9,"H":21,"M":0},"allDay":false,"categories":[{"slug":"music","name":"Music"}],"price":"$25","ticket":{"url":"https://www.matthewsopera.com/event/tayko-jones-album-release-show/","from":"page"},"blurb":"Tayko Jones brings “Garage Jazz” to The Matthews for an album release show celebrating their self-titled debut.","image":{"w":1920,"h":1080,"src":"https://www.matthewsopera.com/wp-content/uploads/2026/08/headers-768x432.png","srcset":"https://www.matthewsopera.com/wp-content/uploads/2026/08/headers-300x169.png 300w, https://www.matthewsopera.com/wp-content/uploads/2026/08/headers-768x432.png 768w, https://www.matthewsopera.com/wp-content/uploads/2026/08/headers-1024x576.png 1024w, https://www.matthewsopera.com/wp-content/uploads/2026/08/headers-1536x864.png 1536w, https://www.matthewsopera.com/wp-content/uploads/2026/08/headers.png 1920w"},"venue":null},{"id":10001298,"key":"self-care-sunday-sound-bath-meditation-series/2026-10-11","title":"Self-Care Sunday: Sound Bath Meditation Series","url":"https://www.matthewsopera.com/event/self-care-sunday-sound-bath-meditation-series/2026-10-11/","start":1791763200000,"end":1791766800000,"from":{"key":"2026-10-11","y":2026,"m":10,"d":11,"H":18,"M":0},"to":{"key":"2026-10-11","y":2026,"m":10,"d":11,"H":19,"M":0},"allDay":false,"categories":[{"slug":"special-events","name":"Special Events"},{"slug":"workshops","name":"Workshops"}],"price":"$15","ticket":{"url":"https://www.matthewsopera.com/event/self-care-sunday-sound-bath-meditation-series/2026-10-11/","from":"page"},"blurb":"We are pleased to bring a beautiful Self-Care Series of intentional and meaningful collaboration to support the community. The Matthews Opera House, CAT Scratch Studios and Creative Explorations Nonprofit invite you to join us for restful sound meditations throughout the school year and into April.","image":{"w":1200,"h":630,"src":"https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-768x403.png","srcset":"https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-300x158.png 300w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-768x403.png 768w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-1024x538.png 1024w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3.png 1200w"},"venue":null},{"id":10001253,"key":"bellman-presentation-2/2026-10-14","title":"Bellman Presentation","url":"https://www.matthewsopera.com/event/bellman-presentation-2/2026-10-14/","start":1792000800000,"end":1792004400000,"from":{"key":"2026-10-14","y":2026,"m":10,"d":14,"H":12,"M":0},"to":{"key":"2026-10-14","y":2026,"m":10,"d":14,"H":13,"M":0},"allDay":false,"categories":[{"slug":"lectures","name":"Lectures & Readings"}],"price":null,"ticket":{"url":"https://www.matthewsopera.com/event/bellman-presentation-2/2026-10-14/","from":"page"},"blurb":"The Bellman Brown Bag series is a humanities program designed to explore ideas, history, literature, art, and culture. The Brown Bag program was developed by Dr. Stewart Bellman in the 1990s.","image":{"w":1920,"h":1080,"src":"https://www.matthewsopera.com/wp-content/uploads/2026/06/Website-Header-2-768x432.png","srcset":"https://www.matthewsopera.com/wp-content/uploads/2026/06/Website-Header-2-300x169.png 300w, https://www.matthewsopera.com/wp-content/uploads/2026/06/Website-Header-2-768x432.png 768w, https://www.matthewsopera.com/wp-content/uploads/2026/06/Website-Header-2-1024x576.png 1024w, https://www.matthewsopera.com/wp-content/uploads/2026/06/Website-Header-2-1536x864.png 1536w, https://www.matthewsopera.com/wp-content/uploads/2026/06/Website-Header-2.png 1920w"},"venue":{"name":"The Matthews Opera House – Theatre","address":"614 Main St","city":"Spearfish","zip":"57783"}},{"id":10001314,"key":"those-crazy-ladies-in-the-house-on-the-corner/2026-10-22","title":"Those Crazy Ladies in the House on the Corner","url":"https://www.matthewsopera.com/event/those-crazy-ladies-in-the-house-on-the-corner/2026-10-22/","start":1792717200000,"end":1792726200000,"from":{"key":"2026-10-22","y":2026,"m":10,"d":22,"H":19,"M":0},"to":{"key":"2026-10-22","y":2026,"m":10,"d":22,"H":21,"M":30},"allDay":false,"categories":[{"slug":"theater","name":"Theater"}],"price":null,"ticket":{"url":"https://www.matthewsopera.com/event/those-crazy-ladies-in-the-house-on-the-corner/2026-10-22/","from":"page"},"blurb":"Three geriatric sisters, a nurse with a secret, and a nephew determined to sell the family home collide in Those Crazy Ladies in the House on the Corner, a heartwarming comedy by Pat Cook.","image":{"w":1600,"h":900,"src":"https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-6-768x432.png","srcset":"https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-6-300x169.png 300w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-6-768x432.png 768w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-6-1024x576.png 1024w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-6-1536x864.png 1536w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-6.png 1600w"},"venue":null},{"id":10001315,"key":"those-crazy-ladies-in-the-house-on-the-corner/2026-10-23","title":"Those Crazy Ladies in the House on the Corner","url":"https://www.matthewsopera.com/event/those-crazy-ladies-in-the-house-on-the-corner/2026-10-23/","start":1792803600000,"end":1792812600000,"from":{"key":"2026-10-23","y":2026,"m":10,"d":23,"H":19,"M":0},"to":{"key":"2026-10-23","y":2026,"m":10,"d":23,"H":21,"M":30},"allDay":false,"categories":[{"slug":"theater","name":"Theater"}],"price":null,"ticket":{"url":"https://www.matthewsopera.com/event/those-crazy-ladies-in-the-house-on-the-corner/2026-10-23/","from":"page"},"blurb":"Three geriatric sisters, a nurse with a secret, and a nephew determined to sell the family home collide in Those Crazy Ladies in the House on the Corner, a heartwarming comedy by Pat Cook.","image":{"w":1600,"h":900,"src":"https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-6-768x432.png","srcset":"https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-6-300x169.png 300w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-6-768x432.png 768w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-6-1024x576.png 1024w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-6-1536x864.png 1536w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-6.png 1600w"},"venue":null},{"id":10001316,"key":"those-crazy-ladies-in-the-house-on-the-corner/2026-10-24","title":"Those Crazy Ladies in the House on the Corner","url":"https://www.matthewsopera.com/event/those-crazy-ladies-in-the-house-on-the-corner/2026-10-24/","start":1792890000000,"end":1792899000000,"from":{"key":"2026-10-24","y":2026,"m":10,"d":24,"H":19,"M":0},"to":{"key":"2026-10-24","y":2026,"m":10,"d":24,"H":21,"M":30},"allDay":false,"categories":[{"slug":"theater","name":"Theater"}],"price":null,"ticket":{"url":"https://www.matthewsopera.com/event/those-crazy-ladies-in-the-house-on-the-corner/2026-10-24/","from":"page"},"blurb":"Three geriatric sisters, a nurse with a secret, and a nephew determined to sell the family home collide in Those Crazy Ladies in the House on the Corner, a heartwarming comedy by Pat Cook.","image":{"w":1600,"h":900,"src":"https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-6-768x432.png","srcset":"https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-6-300x169.png 300w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-6-768x432.png 768w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-6-1024x576.png 1024w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-6-1536x864.png 1536w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-6.png 1600w"},"venue":null},{"id":10001317,"key":"those-crazy-ladies-in-the-house-on-the-corner/2026-10-25","title":"Those Crazy Ladies in the House on the Corner","url":"https://www.matthewsopera.com/event/those-crazy-ladies-in-the-house-on-the-corner/2026-10-25/","start":1792958400000,"end":1792967400000,"from":{"key":"2026-10-25","y":2026,"m":10,"d":25,"H":14,"M":0},"to":{"key":"2026-10-25","y":2026,"m":10,"d":25,"H":16,"M":30},"allDay":false,"categories":[{"slug":"theater","name":"Theater"}],"price":null,"ticket":{"url":"https://www.matthewsopera.com/event/those-crazy-ladies-in-the-house-on-the-corner/2026-10-25/","from":"page"},"blurb":"Three geriatric sisters, a nurse with a secret, and a nephew determined to sell the family home collide in Those Crazy Ladies in the House on the Corner, a heartwarming comedy by Pat Cook.","image":{"w":1600,"h":900,"src":"https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-6-768x432.png","srcset":"https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-6-300x169.png 300w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-6-768x432.png 768w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-6-1024x576.png 1024w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-6-1536x864.png 1536w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-6.png 1600w"},"venue":null},{"id":8428,"key":"film-screening-the-invisible-mammal","title":"Film Screening: The Invisible Mammal","url":"https://www.matthewsopera.com/event/film-screening-the-invisible-mammal/","start":1793059200000,"end":1793070000000,"from":{"key":"2026-10-26","y":2026,"m":10,"d":26,"H":18,"M":0},"to":{"key":"2026-10-26","y":2026,"m":10,"d":26,"H":21,"M":0},"allDay":false,"categories":[{"slug":"film","name":"Film"},{"slug":"special-events","name":"Special Events"}],"price":"Free","ticket":{"url":"https://www.matthewsopera.com/event/film-screening-the-invisible-mammal/","from":"page"},"blurb":"We’re opening the doors for a special Bat Week screening of The Invisible Mammal, a feature-length documentary that brings bats, conservation, disease, and discovery into focus through the stories of women scientists working to protect them.","image":{"w":1610,"h":906,"src":"https://www.matthewsopera.com/wp-content/uploads/2026/09/EPK11Blank-768x432.webp","srcset":"https://www.matthewsopera.com/wp-content/uploads/2026/09/EPK11Blank-300x169.webp 300w, https://www.matthewsopera.com/wp-content/uploads/2026/09/EPK11Blank-768x432.webp 768w, https://www.matthewsopera.com/wp-content/uploads/2026/09/EPK11Blank-1024x576.webp 1024w, https://www.matthewsopera.com/wp-content/uploads/2026/09/EPK11Blank-1536x864.webp 1536w, https://www.matthewsopera.com/wp-content/uploads/2026/09/EPK11Blank.webp 1610w"},"venue":{"name":"The Matthews Opera House – Theatre","address":"614 Main St","city":"Spearfish","zip":"57783"}},{"id":8484,"key":"a-midnight-menagerie","title":"A Midnight Menagerie","url":"https://www.matthewsopera.com/event/a-midnight-menagerie/","start":1793322000000,"end":1793329200000,"from":{"key":"2026-10-29","y":2026,"m":10,"d":29,"H":19,"M":0},"to":{"key":"2026-10-29","y":2026,"m":10,"d":29,"H":21,"M":0},"allDay":false,"categories":[{"slug":"special-events","name":"Special Events"},{"slug":"theater","name":"Theater"}],"price":null,"ticket":{"url":"https://www.matthewsopera.com/event/a-midnight-menagerie/","from":"page"},"blurb":"You’re invited into a world of music, movement, and a little Halloween magic.","image":{"w":1600,"h":900,"src":"https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-8-768x432.png","srcset":"https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-8-300x169.png 300w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-8-768x432.png 768w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-8-1024x576.png 1024w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-8-1536x864.png 1536w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Play-Some-Petty-Date-8.png 1600w"},"venue":null},{"id":8341,"key":"dinosaur-dimensions-expedition","title":"Dinosaur Dimensions: Expedition!","url":"https://www.matthewsopera.com/event/dinosaur-dimensions-expedition/","start":1793574000000,"end":1793581200000,"from":{"key":"2026-11-01","y":2026,"m":11,"d":1,"H":16,"M":0},"to":{"key":"2026-11-01","y":2026,"m":11,"d":1,"H":18,"M":0},"allDay":false,"categories":[{"slug":"special-events","name":"Special Events"},{"slug":"theater","name":"Theater"}],"price":"$20","ticket":{"url":"https://www.matthewsopera.com/event/dinosaur-dimensions-expedition/","from":"page"},"blurb":"Bring the whole family on a prehistoric adventure with Dinosaur Dimensions: Expedition, a high-energy live stage show packed with life-size animatronic dinosaurs, colorful characters, science experiments, and interactive fun.","image":{"w":1920,"h":1080,"src":"https://www.matthewsopera.com/wp-content/uploads/2026/08/videoframe_8076-768x432.png","srcset":"https://www.matthewsopera.com/wp-content/uploads/2026/08/videoframe_8076-300x169.png 300w, https://www.matthewsopera.com/wp-content/uploads/2026/08/videoframe_8076-768x432.png 768w, https://www.matthewsopera.com/wp-content/uploads/2026/08/videoframe_8076-1024x576.png 1024w, https://www.matthewsopera.com/wp-content/uploads/2026/08/videoframe_8076-1536x864.png 1536w, https://www.matthewsopera.com/wp-content/uploads/2026/08/videoframe_8076.png 1920w"},"venue":null},{"id":8481,"key":"play-some-petty-2026","title":"Play Some Petty","url":"https://www.matthewsopera.com/event/play-some-petty-2026/","start":1794016800000,"end":1794025800000,"from":{"key":"2026-11-06","y":2026,"m":11,"d":6,"H":19,"M":0},"to":{"key":"2026-11-06","y":2026,"m":11,"d":6,"H":21,"M":30},"allDay":false,"categories":[{"slug":"music","name":"Music"}],"price":"$25 – $40","ticket":{"url":"https://www.eventbrite.com/e/play-some-petty-a-tom-petty-tribute-at-the-matthews-tickets-2000661997892?aff=guide","from":"website"},"blurb":"The Biscuit Lifters play a Tom Petty tribute at The Matthews on Friday, November 6. Doors at 6:30 PM, tickets $25 to $40.","image":{"w":1600,"h":900,"src":"https://www.matthewsopera.com/wp-content/uploads/2026/09/play-some-petty-nov-6-2026-768x432.jpg","srcset":"https://www.matthewsopera.com/wp-content/uploads/2026/09/play-some-petty-nov-6-2026-300x169.jpg 300w, https://www.matthewsopera.com/wp-content/uploads/2026/09/play-some-petty-nov-6-2026-768x432.jpg 768w, https://www.matthewsopera.com/wp-content/uploads/2026/09/play-some-petty-nov-6-2026-1024x576.jpg 1024w, https://www.matthewsopera.com/wp-content/uploads/2026/09/play-some-petty-nov-6-2026-1536x864.jpg 1536w, https://www.matthewsopera.com/wp-content/uploads/2026/09/play-some-petty-nov-6-2026.jpg 1600w"},"venue":{"name":"The Matthews Opera House – Theatre","address":"614 Main St","city":"Spearfish","zip":"57783"}},{"id":10001299,"key":"self-care-sunday-sound-bath-meditation-series/2026-11-08","title":"Self-Care Sunday: Sound Bath Meditation Series","url":"https://www.matthewsopera.com/event/self-care-sunday-sound-bath-meditation-series/2026-11-08/","start":1794186000000,"end":1794189600000,"from":{"key":"2026-11-08","y":2026,"m":11,"d":8,"H":18,"M":0},"to":{"key":"2026-11-08","y":2026,"m":11,"d":8,"H":19,"M":0},"allDay":false,"categories":[{"slug":"special-events","name":"Special Events"},{"slug":"workshops","name":"Workshops"}],"price":"$15","ticket":{"url":"https://www.matthewsopera.com/event/self-care-sunday-sound-bath-meditation-series/2026-11-08/","from":"page"},"blurb":"We are pleased to bring a beautiful Self-Care Series of intentional and meaningful collaboration to support the community. The Matthews Opera House, CAT Scratch Studios and Creative Explorations Nonprofit invite you to join us for restful sound meditations throughout the school year and into April.","image":{"w":1200,"h":630,"src":"https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-768x403.png","srcset":"https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-300x158.png 300w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-768x403.png 768w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-1024x538.png 1024w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3.png 1200w"},"venue":null},{"id":10001254,"key":"bellman-presentation-2/2026-11-11","title":"Bellman Presentation","url":"https://www.matthewsopera.com/event/bellman-presentation-2/2026-11-11/","start":1794423600000,"end":1794427200000,"from":{"key":"2026-11-11","y":2026,"m":11,"d":11,"H":12,"M":0},"to":{"key":"2026-11-11","y":2026,"m":11,"d":11,"H":13,"M":0},"allDay":false,"categories":[{"slug":"lectures","name":"Lectures & Readings"}],"price":null,"ticket":{"url":"https://www.matthewsopera.com/event/bellman-presentation-2/2026-11-11/","from":"page"},"blurb":"The Bellman Brown Bag series is a humanities program designed to explore ideas, history, literature, art, and culture. The Brown Bag program was developed by Dr. Stewart Bellman in the 1990s.","image":{"w":1920,"h":1080,"src":"https://www.matthewsopera.com/wp-content/uploads/2026/06/Website-Header-2-768x432.png","srcset":"https://www.matthewsopera.com/wp-content/uploads/2026/06/Website-Header-2-300x169.png 300w, https://www.matthewsopera.com/wp-content/uploads/2026/06/Website-Header-2-768x432.png 768w, https://www.matthewsopera.com/wp-content/uploads/2026/06/Website-Header-2-1024x576.png 1024w, https://www.matthewsopera.com/wp-content/uploads/2026/06/Website-Header-2-1536x864.png 1536w, https://www.matthewsopera.com/wp-content/uploads/2026/06/Website-Header-2.png 1920w"},"venue":{"name":"The Matthews Opera House – Theatre","address":"614 Main St","city":"Spearfish","zip":"57783"}},{"id":10001255,"key":"bellman-presentation-2/2026-12-09","title":"Bellman Presentation","url":"https://www.matthewsopera.com/event/bellman-presentation-2/2026-12-09/","start":1796842800000,"end":1796846400000,"from":{"key":"2026-12-09","y":2026,"m":12,"d":9,"H":12,"M":0},"to":{"key":"2026-12-09","y":2026,"m":12,"d":9,"H":13,"M":0},"allDay":false,"categories":[{"slug":"lectures","name":"Lectures & Readings"}],"price":null,"ticket":{"url":"https://www.matthewsopera.com/event/bellman-presentation-2/2026-12-09/","from":"page"},"blurb":"The Bellman Brown Bag series is a humanities program designed to explore ideas, history, literature, art, and culture. The Brown Bag program was developed by Dr. Stewart Bellman in the 1990s.","image":{"w":1920,"h":1080,"src":"https://www.matthewsopera.com/wp-content/uploads/2026/06/Website-Header-2-768x432.png","srcset":"https://www.matthewsopera.com/wp-content/uploads/2026/06/Website-Header-2-300x169.png 300w, https://www.matthewsopera.com/wp-content/uploads/2026/06/Website-Header-2-768x432.png 768w, https://www.matthewsopera.com/wp-content/uploads/2026/06/Website-Header-2-1024x576.png 1024w, https://www.matthewsopera.com/wp-content/uploads/2026/06/Website-Header-2-1536x864.png 1536w, https://www.matthewsopera.com/wp-content/uploads/2026/06/Website-Header-2.png 1920w"},"venue":{"name":"The Matthews Opera House – Theatre","address":"614 Main St","city":"Spearfish","zip":"57783"}},{"id":10001300,"key":"self-care-sunday-sound-bath-meditation-series/2026-12-13","title":"Self-Care Sunday: Sound Bath Meditation Series","url":"https://www.matthewsopera.com/event/self-care-sunday-sound-bath-meditation-series/2026-12-13/","start":1797210000000,"end":1797213600000,"from":{"key":"2026-12-13","y":2026,"m":12,"d":13,"H":18,"M":0},"to":{"key":"2026-12-13","y":2026,"m":12,"d":13,"H":19,"M":0},"allDay":false,"categories":[{"slug":"special-events","name":"Special Events"},{"slug":"workshops","name":"Workshops"}],"price":"$15","ticket":{"url":"https://www.matthewsopera.com/event/self-care-sunday-sound-bath-meditation-series/2026-12-13/","from":"page"},"blurb":"We are pleased to bring a beautiful Self-Care Series of intentional and meaningful collaboration to support the community. The Matthews Opera House, CAT Scratch Studios and Creative Explorations Nonprofit invite you to join us for restful sound meditations throughout the school year and into April.","image":{"w":1200,"h":630,"src":"https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-768x403.png","srcset":"https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-300x158.png 300w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-768x403.png 768w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-1024x538.png 1024w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3.png 1200w"},"venue":null},{"id":10001301,"key":"self-care-sunday-sound-bath-meditation-series/2027-01-10","title":"Self-Care Sunday: Sound Bath Meditation Series","url":"https://www.matthewsopera.com/event/self-care-sunday-sound-bath-meditation-series/2027-01-10/","start":1799629200000,"end":1799632800000,"from":{"key":"2027-01-10","y":2027,"m":1,"d":10,"H":18,"M":0},"to":{"key":"2027-01-10","y":2027,"m":1,"d":10,"H":19,"M":0},"allDay":false,"categories":[{"slug":"special-events","name":"Special Events"},{"slug":"workshops","name":"Workshops"}],"price":"$15","ticket":{"url":"https://www.matthewsopera.com/event/self-care-sunday-sound-bath-meditation-series/2027-01-10/","from":"page"},"blurb":"We are pleased to bring a beautiful Self-Care Series of intentional and meaningful collaboration to support the community. The Matthews Opera House, CAT Scratch Studios and Creative Explorations Nonprofit invite you to join us for restful sound meditations throughout the school year and into April.","image":{"w":1200,"h":630,"src":"https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-768x403.png","srcset":"https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-300x158.png 300w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-768x403.png 768w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-1024x538.png 1024w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3.png 1200w"},"venue":null},{"id":10001302,"key":"self-care-sunday-sound-bath-meditation-series/2027-02-14","title":"Self-Care Sunday: Sound Bath Meditation Series","url":"https://www.matthewsopera.com/event/self-care-sunday-sound-bath-meditation-series/2027-02-14/","start":1802653200000,"end":1802656800000,"from":{"key":"2027-02-14","y":2027,"m":2,"d":14,"H":18,"M":0},"to":{"key":"2027-02-14","y":2027,"m":2,"d":14,"H":19,"M":0},"allDay":false,"categories":[{"slug":"special-events","name":"Special Events"},{"slug":"workshops","name":"Workshops"}],"price":"$15","ticket":{"url":"https://www.matthewsopera.com/event/self-care-sunday-sound-bath-meditation-series/2027-02-14/","from":"page"},"blurb":"We are pleased to bring a beautiful Self-Care Series of intentional and meaningful collaboration to support the community. The Matthews Opera House, CAT Scratch Studios and Creative Explorations Nonprofit invite you to join us for restful sound meditations throughout the school year and into April.","image":{"w":1200,"h":630,"src":"https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-768x403.png","srcset":"https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-300x158.png 300w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-768x403.png 768w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-1024x538.png 1024w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3.png 1200w"},"venue":null},{"id":10001303,"key":"self-care-sunday-sound-bath-meditation-series/2027-03-14","title":"Self-Care Sunday: Sound Bath Meditation Series","url":"https://www.matthewsopera.com/event/self-care-sunday-sound-bath-meditation-series/2027-03-14/","start":1805068800000,"end":1805072400000,"from":{"key":"2027-03-14","y":2027,"m":3,"d":14,"H":18,"M":0},"to":{"key":"2027-03-14","y":2027,"m":3,"d":14,"H":19,"M":0},"allDay":false,"categories":[{"slug":"special-events","name":"Special Events"},{"slug":"workshops","name":"Workshops"}],"price":"$15","ticket":{"url":"https://www.matthewsopera.com/event/self-care-sunday-sound-bath-meditation-series/2027-03-14/","from":"page"},"blurb":"We are pleased to bring a beautiful Self-Care Series of intentional and meaningful collaboration to support the community. The Matthews Opera House, CAT Scratch Studios and Creative Explorations Nonprofit invite you to join us for restful sound meditations throughout the school year and into April.","image":{"w":1200,"h":630,"src":"https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-768x403.png","srcset":"https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-300x158.png 300w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-768x403.png 768w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-1024x538.png 1024w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3.png 1200w"},"venue":null},{"id":10001304,"key":"self-care-sunday-sound-bath-meditation-series/2027-04-11","title":"Self-Care Sunday: Sound Bath Meditation Series","url":"https://www.matthewsopera.com/event/self-care-sunday-sound-bath-meditation-series/2027-04-11/","start":1807488000000,"end":1807491600000,"from":{"key":"2027-04-11","y":2027,"m":4,"d":11,"H":18,"M":0},"to":{"key":"2027-04-11","y":2027,"m":4,"d":11,"H":19,"M":0},"allDay":false,"categories":[{"slug":"special-events","name":"Special Events"},{"slug":"workshops","name":"Workshops"}],"price":"$15","ticket":{"url":"https://www.matthewsopera.com/event/self-care-sunday-sound-bath-meditation-series/2027-04-11/","from":"page"},"blurb":"We are pleased to bring a beautiful Self-Care Series of intentional and meaningful collaboration to support the community. The Matthews Opera House, CAT Scratch Studios and Creative Explorations Nonprofit invite you to join us for restful sound meditations throughout the school year and into April.","image":{"w":1200,"h":630,"src":"https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-768x403.png","srcset":"https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-300x158.png 300w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-768x403.png 768w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3-1024x538.png 1024w, https://www.matthewsopera.com/wp-content/uploads/2026/09/Green-and-White-Minimalist-Aesthetic-Sunday-Worship-Facebook-Post-3.png 1200w"},"venue":null}],"facts":{"visit":[{"label":"Where","text":"614 Main St., Spearfish, SD 57783","maps":"https://www.google.com/maps/search/?api=1&query=The%20Matthews%20Opera%20House%2C%20614%20Main%20St%2C%20Spearfish%2C%20SD%2057783"},{"label":"Parking","text":"Anywhere in downtown Spearfish."},{"label":"Accessibility","text":"The theater is on the second floor, and there's an elevator."},{"label":"Seating","text":"283 seats: 168 on the main floor and 115 in the balcony.","link":{"text":"See the seating chart","href":"https://www.matthewsopera.com/box-office-and-ticketing/"}},{"label":"The bar","text":"Wine, beer, soda and water, before the show and at intermission."},{"label":"Box office","text":"Opens an hour before showtime."},{"label":"Open hours","text":"Monday to Friday, 10 A.M. to 5 P.M. You can buy tickets then, too."},{"label":"Phone","text":"(605) 642-7973","tel":"+16056427973"},{"label":"Lost your tickets?","text":"Call us and we'll resend them, or give us the buyer's name at the door the night of the show."}],"about":{"photo":{"w":2560,"h":1212,"src":"https://www.matthewsopera.com/wp-content/uploads/2026/07/untitled-52-Pano-scaled-e1782911586938-768x364.jpg","srcset":"https://www.matthewsopera.com/wp-content/uploads/2026/07/untitled-52-Pano-scaled-e1782911586938-300x142.jpg 300w, https://www.matthewsopera.com/wp-content/uploads/2026/07/untitled-52-Pano-scaled-e1782911586938-768x364.jpg 768w, https://www.matthewsopera.com/wp-content/uploads/2026/07/untitled-52-Pano-scaled-e1782911586938-1024x485.jpg 1024w, https://www.matthewsopera.com/wp-content/uploads/2026/07/untitled-52-Pano-scaled-e1782911586938-1536x727.jpg 1536w, https://www.matthewsopera.com/wp-content/uploads/2026/07/untitled-52-Pano-scaled-e1782911586938-2048x970.jpg 2048w, https://www.matthewsopera.com/wp-content/uploads/2026/07/untitled-52-Pano-scaled-e1782911586938.jpg 2560w","alt":"Panoramic view of the Matthews auditorium: red walls, gilt boxes, the domed ceiling and the painted drop above the stage."},"title":"The crown jewel of Spearfish.","paragraphs":["Built in 1906, it still stands in its original place on Main Street, kept intact for more than a century.","Opera house, dance hall, movie theater, parachute depot, shooting gallery, and very nearly a set of apartments. The Matthews has been saved, restored, and reinvented by its community for more than a century.","Look up when you take your seat. Directly above the stage sits an original, untouched mural of William Shakespeare, flanked by the great actors Edwin Booth and Joseph Jefferson.","The Matthews Opera House & Arts Center was founded in 1989 to carry the building forward. It's secured for the arts through 2085."],"numbers":{"tag":"The House","title":"By the Numbers","items":[["283","seats in the historic theater"],["168","seats on the main floor"],["115","seats in the balcony"],["1906","the year the curtain first rose"]]},"more":{"text":"Read the full history","href":"https://www.matthewsopera.com/our-history/"}},"involved":{"title":"There is a place for you here","intro":"The Matthews runs on people. Artists who hang work on our walls, actors who step onto our stage, ushers who hand out programs on a Friday night, and vendors who fill City Park every July.","ways":[{"name":"Show your work","text":"Calls for artists, exhibits, and gallery opportunities throughout the year.","href":"https://www.matthewsopera.com/2026-art-opps/"},{"name":"Audition","text":"Step onto our stage. Auditions for our productions are open to the community, experience or not.","href":"https://www.matthewsopera.com/events/category/theater/auditions/","chip":"auditions"},{"name":"Volunteer","text":"Usher a show, help backstage, or lend a hand at an event. Volunteers keep our doors open.","href":"https://www.matthewsopera.com/volunteer/"},{"name":"Teach a workshop","text":"Lead a class in your craft. Workshops are paid, and we cover materials and do the marketing.","href":"https://www.matthewsopera.com/education-and-programs/"},{"name":"Become a vendor","text":"Bring your booth to Festival in the Park, our biggest weekend of the year.","href":"https://www.matthewsopera.com/vendors/"},{"name":"Work here","text":"When we have room for someone new, openings are posted here first.","href":"https://www.matthewsopera.com/careers/"}],"give":{"title":"Help us keep the arts alive in the heart of downtown Spearfish.","text":"Your support is what keeps the lights on and the season going.","button":"Give today","href":"https://app.getpulley.app/donate/thematthews/c/talent"},"partners":[{"name":"Partner with us","text":"Your support fuels year-round performances, education, and community programs in Spearfish. A collaboration, not an ad buy.","href":"https://www.matthewsopera.com/partnerships/"},{"name":"Our annual partners","text":"Every partnership helps us produce community theater, host local artists, and keep our historic opera house thriving.","href":"https://www.matthewsopera.com/annual-partners/"}]},"footer":{"name":"The Matthews Opera House & Arts Center","nonprofit":"A 501(c)(3) nonprofit in Spearfish, South Dakota.","address":"614 Main St., Spearfish, SD 57783","phone":{"text":"(605) 642-7973","tel":"+16056427973"},"social":[{"label":"Instagram","href":"https://www.instagram.com/matthewsopera/"},{"label":"Facebook","href":"https://www.facebook.com/SpearfishArtsCenter"}],"site":"https://www.matthewsopera.com/"}}};
+</script>
+<script>
+(() => {
+"use strict";
+/* The Matthews Guide: the calendar rules.
+
+   One file, used in two places. build.mjs imports it to check the feed and
+   print the gap report. The build also inlines it into the page, where the
+   same functions turn the built-in snapshot, and every live re-read of the
+   feed, into the Guide's events. The report and the page can't disagree
+   about a ticket link, a price or a date, because they run the same code.
+
+   Plain functions over The Events Calendar's JSON: no DOM, no network.
+   Only `export function` and `export const` at the top level. The build
+   strips the keyword to inline this file as an ordinary script.            */
+
+const SITE = "https://www.matthewsopera.com";
+const FEED = SITE + "/wp-json/tribe/events/v1/events";
+const TZ = "America/Denver"; // Spearfish
+
+/* Left out before anything else: the PRIVATE EVENT category (rentals), and
+   any event with "Hide from event listings" ticked. */
+const PRIVATE_CATEGORY = "private-event";
+
+/* Filter chips, in the order people browse (plans/digital-booklet-ideas.md).
+   A chip only appears when an upcoming event carries its category. A
+   category not named here still gets a chip, after these, A to Z. */
+const CATEGORY_ORDER = ["theater", "music", "film", "visual-arts", "workshops", "lectures", "special-events", "makespace", "auditions"];
+
+/* Where tickets are sold. Not every event is ticketed (auditions aren't),
+   but every ticketed one sells through Eventbrite, so a ticket link is an
+   Eventbrite link: from the website field (where publish_event.py puts it)
+   or, failing that, inside the description. Add Lanyard's host here when it
+   arrives. */
+const TICKET_HOSTS = ["eventbrite.com"];
+
+// A price is how the calendar says an event is ticketed; "Free" says it isn't.
+function isFree(price) { return /^free\b/i.test(String(price || "").trim()); }
+
+/* Eventbrite's ?aff= code, so its sales report credits the Guide. */
+const AFF = "guide";
+
+const DAY = 86400000;
+
+/* ---------------------------------------------------------------- text --- */
+
+const NAMED = {
+  amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " ", ndash: "–", mdash: "—", hellip: "…",
+  rsquo: "’", lsquo: "‘", rdquo: "”", ldquo: "“", eacute: "é", egrave: "è", aacute: "á", ntilde: "ñ",
+  uuml: "ü", ouml: "ö", copy: "©", reg: "®", trade: "™", bull: "•", middot: "·", times: "×",
+};
+
+function decode(s) {
+  return String(s ?? "").replace(/&(#x[0-9a-f]+|#[0-9]+|[a-z]+);/gi, (all, e) => {
+    if (e[0] !== "#") return NAMED[e.toLowerCase()] ?? all;
+    const n = e[1] === "x" || e[1] === "X" ? parseInt(e.slice(2), 16) : parseInt(e.slice(1), 10);
+    return n > 0 && n < 0x110000 ? String.fromCodePoint(n) : all;
+  });
+}
+
+// Blocks become a space; inline tags vanish, so "<em>Mammal</em>," stays "Mammal,".
+const BLOCK = /<\/?(?:p|div|br|h[1-6]|li|ul|ol|tr|td|th|table|blockquote|figure|figcaption|section|article|header|footer|hr)\b[^>]*>/gi;
+
+function textOf(html) {
+  return decode(String(html ?? "")
+    .replace(/<(style|script|noscript|template|iframe)\b[\s\S]*?<\/\1\s*>/gi, " ")
+    .replace(BLOCK, " ")
+    .replace(/<[^>]*>/g, ""))
+    .replace(/\s+/g, " ")
+    .replace(/\s+([,.;:!?])/g, "$1")
+    .trim();
+}
+
+function hrefs(html) {
+  return [...String(html ?? "").matchAll(/<a\b[^>]*?\bhref\s*=\s*(["'])(.*?)\1/gi)].map((m) => decode(m[2]).trim());
+}
+
+function parseUrl(s) {
+  try { return s ? new URL(String(s).trim()) : null; } catch { return null; }
+}
+
+const hostIs = (u, host) => u.hostname === host || u.hostname.endsWith("." + host);
+function isOwn(u) { return hostIs(u, "matthewsopera.com"); }
+function isTicketHost(u) { return TICKET_HOSTS.some((h) => hostIs(u, h)); }
+
+/* ---------------------------------------------------------------- time --- */
+
+const WEEKDAY = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+let wallClock = null;
+
+// The wall clock in Spearfish at an instant.
+function zoned(ms) {
+  wallClock = wallClock || new Intl.DateTimeFormat("en-US", {
+    timeZone: TZ, hourCycle: "h23", weekday: "short",
+    year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute: "numeric", second: "numeric",
+  });
+  const p = {};
+  for (const x of wallClock.formatToParts(new Date(ms))) p[x.type] = x.value;
+  return { y: +p.year, m: +p.month, d: +p.day, H: +p.hour % 24, M: +p.minute, S: +p.second, dow: WEEKDAY[p.weekday] };
+}
+
+// A Spearfish wall-clock time as an instant, right across the DST changes.
+function fromZoned(y, m, d, H = 0, M = 0) {
+  const want = Date.UTC(y, m - 1, d, H, M);
+  const offset = (ms) => { const z = zoned(ms); return Date.UTC(z.y, z.m - 1, z.d, z.H, z.M, z.S) - ms; };
+  return want - offset(want - offset(want));
+}
+
+const pad = (n) => String(n).padStart(2, "0");
+function ymd(y, m, d) { return `${y}-${pad(m)}-${pad(d)}`; }
+function dayKey(ms) { const z = zoned(ms); return ymd(z.y, z.m, z.d); }
+function addDays(key, n) {
+  const [y, m, d] = key.split("-").map(Number);
+  const t = new Date(Date.UTC(y, m - 1, d + n));
+  return ymd(t.getUTCFullYear(), t.getUTCMonth() + 1, t.getUTCDate());
+}
+function startOf(key) { const [y, m, d] = key.split("-").map(Number); return fromZoned(y, m, d); }
+function weekday(key) { const [y, m, d] = key.split("-").map(Number); return new Date(Date.UTC(y, m - 1, d)).getUTCDay(); }
+function daysBetween(a, b) {
+  const t = (key) => { const [y, m, d] = key.split("-").map(Number); return Date.UTC(y, m - 1, d); };
+  return Math.round((t(b) - t(a)) / DAY);
+}
+
+// The feed's "2026-10-23 01:00:00" UTC stamp, as an instant.
+function instant(s) {
+  const m = /^(\d{4})-(\d\d)-(\d\d)[ T](\d\d):(\d\d)(?::(\d\d))?/.exec(String(s || ""));
+  return m ? Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +(m[6] || 0)) : NaN;
+}
+
+// The feed's "2026-10-22 19:00:00" Spearfish time, as parts for display.
+function wall(s) {
+  const m = /^(\d{4})-(\d\d)-(\d\d)[ T](\d\d):(\d\d)/.exec(String(s || ""));
+  return m ? { key: `${m[1]}-${m[2]}-${m[3]}`, y: +m[1], m: +m[2], d: +m[3], H: +m[4], M: +m[5] } : null;
+}
+
+/* --------------------------------------------------------------- words --- */
+/* AP style, the way the rest of the Matthews writes dates: Sept. 25, 7 P.M. */
+
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const MONTHS_AP = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."];
+const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const DAYS_AP = ["Sun.", "Mon.", "Tue.", "Wed.", "Thu.", "Fri.", "Sat."];
+const DAYS_TAG = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+function clock(H, M) {
+  if (H === 12 && M === 0) return "Noon";
+  if (H === 0 && M === 0) return "Midnight";
+  return `${H % 12 || 12}${M ? ":" + pad(M) : ""} ${H < 12 ? "A.M." : "P.M."}`;
+}
+
+// "7 to 9:30 P.M.", "11 A.M. to 1 P.M.", "Noon to 1 P.M."
+function timeRange(a, b) {
+  if (!b || b.key !== a.key || (b.H === a.H && b.M === a.M)) return clock(a.H, a.M);
+  const A = clock(a.H, a.M);
+  const B = clock(b.H, b.M);
+  const sameHalf = (a.H < 12) === (b.H < 12) && !/Noon|Midnight/.test(A + B);
+  return sameHalf ? `${A.replace(/ [AP]\.M\.$/, "")} to ${B}` : `${A} to ${B}`;
+}
+
+function shortDate(w, year) { return `${MONTHS_AP[w.m - 1]} ${w.d}${year && w.y !== year ? `, ${w.y}` : ""}`; }
+function longDate(w, year) { return `${DAYS[weekday(w.key)]}, ${shortDate(w, year)}`; }
+
+// "Oct. 22, 23, 24 and 25" · "Oct. 11, Nov. 8 and Dec. 13"
+function dateList(ws) {
+  const parts = [];
+  let last = null;
+  for (const w of ws) {
+    parts.push(last && last.m === w.m && last.y === w.y ? String(w.d) : shortDate(w));
+    last = w;
+  }
+  return parts.length > 1 ? `${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}` : parts[0] || "";
+}
+
+// "Oct. 22 to 25" · "Nov. 28 to Dec. 5"
+function dateSpan(a, b) {
+  if (a.key === b.key) return shortDate(a);
+  return a.m === b.m && a.y === b.y ? `${shortDate(a)} to ${b.d}` : `${shortDate(a)} to ${shortDate(b)}`;
+}
+
+/* -------------------------------------------------------------- events --- */
+
+// Why an event stays out of the Guide entirely, or null.
+function leaveOut(raw) {
+  if (raw.hide_from_listings) return "hidden";
+  if ((raw.categories || []).some((c) => c.slug === PRIVATE_CATEGORY)) return "private";
+  if (raw.status && raw.status !== "publish") return "unpublished";
+  return null;
+}
+
+/* The feed, as the Guide's events. Returns what's listed, what was left out
+   and why, and anything too broken to show at all (no title, no start). */
+function normalize(raws) {
+  const events = [];
+  const left = [];
+  const problems = [];
+  const seen = new Set();
+  for (const raw of raws || []) {
+    const why = leaveOut(raw);
+    if (why) { left.push({ why, title: decode(raw.title), date: String(raw.start_date || "").slice(0, 10) }); continue; }
+    const e = toEvent(raw);
+    if (typeof e === "string") { problems.push(e); continue; }
+    if (seen.has(e.key)) continue; // the feed can repeat an event across pages if the calendar changes mid-read
+    seen.add(e.key);
+    events.push(e);
+  }
+  events.sort((a, b) => a.start - b.start || a.title.localeCompare(b.title));
+  return { events, left, problems };
+}
+
+function toEvent(raw) {
+  const title = decode(raw.title).replace(/\s+/g, " ").trim();
+  if (!title) return `event ${raw.id} has no title`;
+  const page = parseUrl(raw.url);
+  if (!page || page.protocol !== "https:") return `${title}: its page address isn't https (${raw.url})`;
+  const start = instant(raw.utc_start_date);
+  const from = wall(raw.start_date);
+  if (!Number.isFinite(start) || !from) return `${title}: no start date and time`;
+  const end = instant(raw.utc_end_date);
+  const to = wall(raw.end_date);
+
+  const ticket = ticketFor(raw);
+  const blurb = blurbFor(raw);
+  const image = imageFor(raw);
+  const venue = venueFor(raw);
+  const e = {
+    id: raw.id,
+    key: keyOf(page),
+    title,
+    url: page.toString(),
+    start,
+    end: Number.isFinite(end) && end >= start ? end : start,
+    from,
+    to: to || from,
+    allDay: !!raw.all_day,
+    categories: (raw.categories || []).map((c) => ({ slug: c.slug, name: decode(c.name) })),
+    price: decode(raw.cost).trim() || null,
+    ticket: { url: ticket.url, from: ticket.from },
+    blurb: blurb.text,
+    image,
+    venue,
+    gaps: [],
+  };
+  const gaps = e.gaps;
+  const ticketed = !!e.price && !isFree(e.price);
+  if (!e.price) gaps.push(["price"]);
+  if (ticketed && ticket.from === "page") gaps.push(["tickets"]);
+  // Where the website field points only matters when a ticket link is owed.
+  gaps.push(...ticket.notes.filter(([code]) => ticketed || code === "tickets-http"));
+  if (blurb.from === "description") gaps.push(["excerpt"]);
+  if (!blurb.from) gaps.push(["excerpt-none"]);
+  if (!venue) gaps.push(["venue"]);
+  if (!image) gaps.push(["image"]);
+  else if (!is16x9(image)) gaps.push(["image-ratio", `${image.w}×${image.h}`]);
+  return e;
+}
+
+// "those-crazy-ladies-in-the-house-on-the-corner/2026-10-22": stable across a
+// series being regenerated, unlike the numeric ids of recurring dates.
+function keyOf(u) {
+  return decodeURIComponent(u.pathname).replace(/^\/event\//, "").replace(/^\/+|\/+$/g, "") || String(u);
+}
+
+/* Get tickets: an Eventbrite link in the website field, where
+   publish_event.py puts it; else one inside the description; else the
+   event's own page, where the button says "Event details" instead. That
+   last is right for an event with no tickets, like an audition. */
+function ticketFor(raw) {
+  const notes = [];
+  const site = parseUrl(raw.website);
+  const found = [["website", site], ...hrefs(raw.description).map((h) => ["description", parseUrl(h)])];
+  for (const [from, u] of found) {
+    if (!u || !isTicketHost(u)) continue;
+    if (u.protocol !== "https:") { notes.push(["tickets-http", u.toString()]); continue; }
+    return { url: withAff(u), from, notes };
+  }
+  if (site && isOwn(site)) notes.push(["tickets-self", site.pathname]);
+  else if (site && !isTicketHost(site)) notes.push(["tickets-host", site.hostname]);
+  return { url: String(raw.url), from: "page", notes };
+}
+
+function withAff(u) {
+  const x = new URL(u.toString());
+  if (AFF && hostIs(x, "eventbrite.com")) x.searchParams.set("aff", AFF);
+  return x.toString();
+}
+
+/* The hand-written excerpt. Without one, the description's first real
+   paragraph, with the date block, styles and embeds taken out first. (The
+   site's own listings strip tags without removing <style>, which is how raw
+   CSS once printed onto every card.) Flagged in the report either way. */
+function blurbFor(raw) {
+  const ex = textOf(raw.excerpt);
+  if (ex) return { text: ex, from: "excerpt" };
+  const body = String(raw.description || "")
+    .replace(/<div[^>]*tribe-events-schedule[\s\S]*?<\/div>/gi, " ")
+    .replace(/<(style|script|figure|iframe|noscript|template)\b[\s\S]*?<\/\1\s*>/gi, " ");
+  for (const m of body.matchAll(/<(p|h[1-6]|blockquote)\b[^>]*>([\s\S]*?)<\/\1>/gi)) {
+    const t = textOf(m[2]);
+    if (t.length >= 40 && !/[{}]/.test(t)) return { text: clip(t, 320), from: "description" };
+  }
+  return { text: "", from: null };
+}
+
+function clip(t, max) {
+  if (t.length <= max) return t;
+  const cut = t.slice(0, max);
+  const stop = Math.max(cut.lastIndexOf(". "), cut.lastIndexOf("! "), cut.lastIndexOf("? "));
+  return stop > max * 0.5 ? cut.slice(0, stop + 1) : cut.slice(0, cut.lastIndexOf(" ")).replace(/[,;:]$/, "") + "…";
+}
+
+/* WordPress's own resized copies, for srcset. Crops (the square thumbnail,
+   form-choice squares) don't match the photo's shape, so they're skipped. */
+function imageFrom(url, width, height, sizes) {
+  if (!url || !width || !height) return null;
+  const ratio = width / height;
+  const all = [{ w: width, url }];
+  for (const s of Object.values(sizes || {})) {
+    const w = s && (s.width || s.w);
+    const h = s && (s.height || s.h);
+    const u = s && (s.url || s.source_url);
+    if (w && h && u && Math.abs(w / h - ratio) <= 0.02 * ratio) all.push({ w, url: u });
+  }
+  const byWidth = new Map();
+  for (const x of all) if (parseUrl(x.url)?.protocol === "https:" && !byWidth.has(x.w)) byWidth.set(x.w, x);
+  const list = [...byWidth.values()].sort((a, b) => a.w - b.w);
+  if (!list.length) return null;
+  const src = list.find((x) => x.w >= 768) || list[list.length - 1];
+  return { w: width, h: height, src: src.url, srcset: list.map((x) => `${x.url} ${x.w}w`).join(", ") };
+}
+
+function imageFor(raw) {
+  const im = raw.image;
+  return im && im.url ? imageFrom(im.url, im.width, im.height, im.sizes) : null;
+}
+
+function is16x9(im) { return Math.abs(im.w / im.h - 16 / 9) <= 0.01 * (16 / 9); }
+
+function venueFor(raw) {
+  const v = raw.venue;
+  if (!v || Array.isArray(v) || !v.venue) return null;
+  return { name: decode(v.venue).trim(), address: decode(v.address).trim(), city: decode(v.city).trim(), zip: String(v.zip || "").trim() };
+}
+
+// "The Matthews Opera House – Theatre, 614 Main St, Spearfish 57783", from the venue record only.
+function place(v) {
+  return v ? [v.name, v.address, [v.city, v.zip].filter(Boolean).join(" ")].filter(Boolean).join(", ") : "";
+}
+
+/* ---------------------------------------------------------- the Guide --- */
+
+function upcoming(events, now) { return events.filter((e) => e.end > now); }
+
+/* Back-to-back dates of the same show become one listing: the four nights
+   of a play, two audition nights. A monthly series stays one listing per
+   date, since its dates are weeks apart. Events must be sorted by start. */
+function runs(events) {
+  const out = [];
+  const open = new Map();
+  for (const e of events) {
+    const r = open.get(e.title);
+    if (r && e.start - r.shows[r.shows.length - 1].start <= 7 * DAY) { r.shows.push(e); continue; }
+    const run = { title: e.title, shows: [e] };
+    open.set(e.title, run);
+    out.push(run);
+  }
+  for (const r of out) {
+    r.key = r.shows[0].key;
+    const cats = new Map();
+    for (const e of r.shows) for (const c of e.categories) cats.set(c.slug, c);
+    r.categories = [...cats.values()];
+  }
+  return out;
+}
+
+/* Coming up, at an instant. The soonest thing leads, named for when it is
+   (On now, Tonight, Today, Tomorrow, This weekend, Next up); then whatever
+   else is on today, the rest of this week, this weekend (Friday to Sunday),
+   and the next few after that. */
+function comingUp(events, now, { next = 4 } = {}) {
+  const live = upcoming(events, now);
+  if (!live.length) return null;
+  const today = dayKey(now);
+  const dow = weekday(today);
+  const friday = addDays(today, dow === 0 ? -2 : dow === 6 ? -1 : 5 - dow);
+  const weekendFrom = startOf(friday);
+  const weekendTo = startOf(addDays(friday, 3));
+  const tomorrowFrom = startOf(addDays(today, 1));
+
+  const all = runs(live);
+  const lead = live[0];
+  const leadRun = all.find((r) => r.shows.includes(lead));
+  const leadDay = lead.from.key;
+  let tag;
+  if (lead.start <= now) tag = "now";
+  else if (leadDay === today) tag = lead.from.H >= 17 ? "tonight" : "today";
+  else if (leadDay === addDays(today, 1)) tag = "tomorrow";
+  else if (lead.start >= weekendFrom && lead.start < weekendTo) tag = "weekend";
+  else tag = "next";
+  const HEADINGS = { now: "On now", tonight: "Tonight", today: "Today", tomorrow: "Tomorrow", weekend: "This weekend", next: "Next up" };
+  const days = daysBetween(today, leadDay);
+
+  const used = new Set([leadRun]);
+  const take = (test, limit = Infinity) => {
+    const got = [];
+    for (const r of all) {
+      if (got.length >= limit) break;
+      if (!used.has(r) && r.shows.some(test)) { used.add(r); got.push(r); }
+    }
+    return got;
+  };
+  const sections = [];
+  const add = (id, title, list) => { if (list.length) sections.push({ id, title, runs: list }); };
+  add("today", tag === "tonight" || (tag === "now" && lead.from.H >= 17) ? "Also tonight" : "Also today", take((e) => e.start < tomorrowFrom));
+  if (now < weekendFrom) add("week", "This week", take((e) => e.start < weekendFrom));
+  add("weekend", tag === "weekend" ? "Also this weekend" : "This weekend", take((e) => e.start >= weekendFrom && e.start < weekendTo));
+  add("next", tag === "next" ? "After that" : "Next up", take(() => true, next));
+
+  return {
+    lead: { show: lead, run: leadRun, tag, heading: HEADINGS[tag], days },
+    sections,
+  };
+}
+
+// Month by month, each listing under the month of its next date.
+function months(rs, now) {
+  const year = zoned(now).y;
+  const out = [];
+  for (const r of rs) {
+    const f = r.shows[0].from;
+    const key = `${f.y}-${pad(f.m)}`;
+    let g = out[out.length - 1];
+    if (!g || g.key !== key) out.push((g = { key, label: MONTHS[f.m - 1] + (f.y !== year ? ` ${f.y}` : ""), runs: [] }));
+    g.runs.push(r);
+  }
+  return out;
+}
+
+function chips(rs) {
+  const found = new Map();
+  for (const r of rs) for (const c of r.categories) {
+    if (c.slug === PRIVATE_CATEGORY) continue;
+    const x = found.get(c.slug) || { slug: c.slug, name: c.name, n: 0 };
+    x.n++;
+    found.set(c.slug, x);
+  }
+  const rank = (s) => { const i = CATEGORY_ORDER.indexOf(s); return i < 0 ? CATEGORY_ORDER.length : i; };
+  return [...found.values()].sort((a, b) => rank(a.slug) - rank(b.slug) || a.name.localeCompare(b.name));
+}
+
+/* ------------------------------------------------------ add to calendar --- */
+
+function ics(e, stamp = Date.now()) {
+  const esc = (s) => String(s).replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+  const utc = (ms) => new Date(ms).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+  const lines = [
+    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//The Matthews Opera House & Arts Center//The Matthews Guide//EN",
+    "CALSCALE:GREGORIAN", "METHOD:PUBLISH", "BEGIN:VEVENT",
+    `UID:${e.key.replace(/[^a-z0-9-]+/gi, "-")}@matthewsopera.com`,
+    `DTSTAMP:${utc(stamp)}`,
+  ];
+  if (e.allDay) lines.push(`DTSTART;VALUE=DATE:${e.from.key.replace(/-/g, "")}`, `DTEND;VALUE=DATE:${addDays(e.to.key, 1).replace(/-/g, "")}`);
+  else lines.push(`DTSTART:${utc(e.start)}`, `DTEND:${utc(e.end > e.start ? e.end : e.start)}`);
+  lines.push(`SUMMARY:${esc(e.title)}`);
+  const where = place(e.venue);
+  if (where) lines.push(`LOCATION:${esc(where)}`);
+  const about = [e.blurb, e.ticket.from !== "page" ? `Tickets: ${e.ticket.url}` : "", e.url].filter(Boolean).join("\n\n");
+  lines.push(`DESCRIPTION:${esc(about)}`, `URL:${e.url}`, "END:VEVENT", "END:VCALENDAR");
+  return lines.map(fold).join("\r\n") + "\r\n";
+}
+
+// RFC 5545: lines of at most 75 octets, continued with a leading space.
+function fold(line) {
+  const enc = new TextEncoder();
+  if (enc.encode(line).length <= 75) return line;
+  const out = [];
+  let cur = "";
+  let n = 0;
+  let limit = 75;
+  for (const ch of line) {
+    const b = enc.encode(ch).length;
+    if (n + b > limit) { out.push(cur); cur = ""; n = 0; limit = 74; }
+    cur += ch;
+    n += b;
+  }
+  out.push(cur);
+  return out.join("\r\n ");
+}
+
+/* ------------------------------------------------------ the gap report --- */
+
+const GAPS = {
+  price: "Price is blank, so there's no telling whether it's ticketed (add the price, or Free)",
+  tickets: "Priced, so it's ticketed, but there's no Eventbrite link (the button says Event details)",
+  "tickets-self": "Ticketed, but its website field points back at matthewsopera.com instead of Eventbrite",
+  "tickets-host": "Ticketed, but its website field isn't an Eventbrite link",
+  "tickets-http": "An Eventbrite link isn't https, so the Guide ignored it",
+  excerpt: "No excerpt, so the Guide shows the description's first paragraph",
+  "excerpt-none": "No excerpt, and no paragraph in the description to show instead",
+  venue: "No venue, so Add to calendar goes out without a location",
+  image: "No featured image",
+  "image-ratio": "Featured image isn't 16:9 (the site's hero stretches it; the Guide crops it)",
+};
+
+function gapReport(events) {
+  const out = [];
+  for (const [code, label] of Object.entries(GAPS)) {
+    const byTitle = new Map();
+    for (const e of events) {
+      for (const [c, detail] of e.gaps) {
+        if (c !== code) continue;
+        const k = `${e.title}\u0000${detail || ""}`;
+        if (!byTitle.has(k)) byTitle.set(k, { title: e.title, detail: detail || "", free: isFree(e.price), url: e.url, dates: [] });
+        byTitle.get(k).dates.push(e.from);
+      }
+    }
+    const items = [...byTitle.values()];
+    if (items.length) out.push({ code, label, count: items.reduce((n, x) => n + x.dates.length, 0), items });
+  }
+  return out;
+}
+
+/* The Matthews Guide: the page.
+
+   Runs in the same closure as events.js (the build inlines both as one
+   script), so the calendar rules are called directly: normalize, runs,
+   comingUp, months, chips, ics.
+
+   Everything on the page comes from window.GUIDE, which build.mjs writes: a
+   snapshot of the Events Calendar feed, and the Visit / About / Get involved
+   facts. When the page opens, and whenever it comes back to the screen, it
+   re-reads the feed and redraws if the calendar has changed since the build.
+   If that fails (no signal, the site is down), the snapshot stands.
+
+   ?now=2026-10-22T17:30 pins the clock, in Spearfish time, to preview any
+   moment: a show night, a quiet week.                                       */
+
+const D = window.GUIDE;
+if (!D) return;
+
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+const EXT = 'target="_blank" rel="noopener"';
+const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ----------------------------------------------------------- the clock --- */
+
+const PINNED = (() => {
+  const q = new URLSearchParams(location.search).get("now");
+  if (!q) return null;
+  if (/(z|[+-]\d\d:?\d\d)$/i.test(q)) { const t = Date.parse(q); return Number.isNaN(t) ? null : t; }
+  const m = /^(\d{4})-(\d\d)-(\d\d)(?:[T ](\d\d):(\d\d))?$/.exec(q);
+  return m ? fromZoned(+m[1], +m[2], +m[3], +(m[4] ?? 12), +(m[5] ?? 0)) : null;
+})();
+const now = () => PINNED ?? Date.now();
+const thisYear = () => zoned(now()).y;
+
+/* -------------------------------------------------------- the calendar --- */
+
+let events = D.events; // the snapshot, until the live feed answers
+let checkedAt = null; // when it last did
+const live = () => upcoming(events, now());
+const liveRuns = () => runs(live());
+const byKey = (key) => events.find((e) => e.key === key) || null;
+const runOf = (key) => liveRuns().find((r) => r.shows.some((e) => e.key === key)) || null;
+
+/* ---------------------------------------------------------- My Matthews --- */
+/* Per phone, per browser. If storage is blocked, saving still works for the
+   visit; it just won't be there next time. */
+
+const SAVED = "matthews-guide.saved";
+const store = {
+  get() {
+    try { const v = JSON.parse(localStorage.getItem(SAVED) || "[]"); return Array.isArray(v) ? v : []; } catch { return []; }
+  },
+  set(list) {
+    try { localStorage.setItem(SAVED, JSON.stringify(list)); } catch { /* private mode */ }
+  },
+};
+const saved = new Set(store.get());
+const isSaved = (run) => run.shows.some((e) => saved.has(e.key));
+
+function toggleSave(key) {
+  const run = runOf(key);
+  if (!run) return;
+  const on = !isSaved(run);
+  for (const e of run.shows) {
+    if (on) saved.add(e.key);
+    else saved.delete(e.key);
+  }
+  store.set([...saved]);
+  for (const b of $$("[data-save]")) {
+    if (run.shows.some((e) => e.key === b.dataset.save)) paintSave(b, on);
+  }
+  toast(on ? "Saved to My Matthews" : "Removed from My Matthews");
+  renderComingLists();
+  renderCalendar();
+  renderSaved();
+}
+
+function paintSave(button, on) {
+  button.classList.toggle("is-on", on);
+  button.textContent = on ? "Saved ✓" : "Save";
+}
+
+/* ---------------------------------------------------------------- words --- */
+
+const timeOf = (e) => (e.allDay ? "All day" : clock(e.from.H, e.from.M));
+const whenShort = (e) => `${DAYS_AP[weekday(e.from.key)]}, ${shortDate(e.from, thisYear())} · ${timeOf(e)}`;
+
+function whenLine(e) {
+  const y = thisYear();
+  if (e.allDay) return e.to.key !== e.from.key ? `${longDate(e.from, y)} to ${longDate(e.to, y)}` : `${longDate(e.from, y)} · All day`;
+  if (e.to.key !== e.from.key) return `${longDate(e.from, y)}, ${clock(e.from.H, e.from.M)} to ${longDate(e.to, y)}, ${clock(e.to.H, e.to.M)}`;
+  return `${longDate(e.from, y)} · ${timeRange(e.from, e.to)}`;
+}
+
+// The facts line under a listing's title.
+function runLine(run, dated) {
+  const e = run.shows[0];
+  if (run.shows.length === 1) return [dated ? shortDate(e.from, thisYear()) : "", timeOf(e), e.price].filter(Boolean).join(" · ");
+  const last = run.shows[run.shows.length - 1];
+  const times = new Set(run.shows.map(timeOf));
+  return [dateSpan(e.from, last.from), `${run.shows.length} dates`, times.size === 1 ? timeOf(e) : "", e.price].filter(Boolean).join(" · ");
+}
+
+/* --------------------------------------------------------------- pieces --- */
+
+function img(im, sizes, eager = false) {
+  if (!im) return "";
+  return `<img src="${esc(im.src)}" srcset="${esc(im.srcset)}" sizes="${sizes}" alt="${esc(im.alt || "")}" width="${im.w}" height="${im.h}" decoding="async" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'}>`;
+}
+const frame = (im, cls, sizes, eager) => `<span class="frame ${cls}">${img(im, sizes, eager)}</span>`;
+
+function row(run, { dated = false } = {}) {
+  const e = run.shows[0];
+  const star = isSaved(run) ? '<span class="star" aria-hidden="true">★</span><span class="vh"> (saved)</span>' : "";
+  return `<li class="row"><a class="row-hit${e.image ? "" : " is-plain"}" href="#e/${esc(e.key)}" data-open="${esc(e.key)}">
+    <span class="row-date" aria-hidden="true"><span class="label">${DAYS_TAG[weekday(e.from.key)]}</span><span class="daynum">${e.from.d}</span></span>
+    <span class="row-body"><span class="vh">${esc(longDate(e.from, thisYear()))}: </span><span class="row-title">${esc(run.title)}${star}</span><span class="row-meta">${esc(runLine(run, dated))}</span></span>
+    ${e.image ? frame(e.image, "row-thumb", "(min-width: 48rem) 160px, 88px") : ""}
+  </a></li>`;
+}
+
+/* One date of an event, in full: the lead in Coming up, and the sheet. */
+function card(e, run, { lead = false } = {}) {
+  const cats = e.categories.map((c) => c.name).join(" · ");
+  const buy = e.ticket.from === "page"
+    ? `<a class="readon" href="${esc(e.url)}" ${EXT}>Event details</a>`
+    : `<a class="readon" href="${esc(e.ticket.url)}" ${EXT}>Get tickets</a>`;
+  const on = isSaved(run);
+  const others = run.shows.filter((x) => x.key !== e.key);
+  const title = lead
+    ? `<h3 class="headline card-title"><a href="#e/${esc(e.key)}" data-open="${esc(e.key)}">${esc(e.title)}</a></h3>`
+    : `<h2 class="headline card-title" id="sheet-title" tabindex="-1">${esc(e.title)}</h2>`;
+  return `<article class="card">
+    ${e.image ? `<figure class="bleed">${frame(e.image, "", "(min-width: 48rem) 47.938rem, 100vw", lead)}</figure>` : ""}
+    <div class="shell card-body">
+      ${title}
+      <p class="when">${esc(whenLine(e))}</p>
+      ${e.price ? `<p class="price">${esc(e.price)}</p>` : ""}
+      ${e.venue ? `<p class="place">${esc(e.venue.name)}</p>` : ""}
+      ${cats ? `<p class="place">${esc(cats)}</p>` : ""}
+      ${e.blurb ? `<p class="blurb">${esc(e.blurb)}</p>` : ""}
+      <div class="actions">${buy}</div>
+      <div class="actions-2">
+        <button type="button" class="line${on ? " is-on" : ""}" data-save="${esc(e.key)}">${on ? "Saved ✓" : "Save"}</button>
+        <button type="button" class="line" data-ics="${esc(e.key)}">Add to calendar</button>
+        <button type="button" class="line" data-share-event="${esc(e.key)}">Share</button>
+      </div>
+      ${e.ticket.from !== "page" ? `<p class="more"><a href="${esc(e.url)}" ${EXT}>More on matthewsopera.com</a></p>` : ""}
+      ${others.length ? `<div class="dates"><p class="label">${others.length === 1 ? "The other date" : "The other dates"}</p><div class="date-rows">${others
+        .map((x) => `<a href="#e/${esc(x.key)}" data-open="${esc(x.key)}"><span>${esc(whenShort(x))}</span><span class="arrow" aria-hidden="true">→</span></a>`)
+        .join("")}</div></div>` : ""}
+    </div>
+  </article>`;
+}
+
+/* ------------------------------------------------------------ coming up --- */
+
+let lastState = "";
+
+function renderComingUp() {
+  const t = now();
+  const c = comingUp(events, t);
+  const note = $("#coming-note");
+  if (!c) {
+    $("#coming-title").textContent = "Coming up";
+    note.textContent = "";
+    $("#lead").innerHTML = `<div class="shell"><p class="empty">Nothing is on the calendar right now. New shows go up at <a href="${esc(D.facts.footer.site)}events/" ${EXT}>matthewsopera.com/events</a>.</p></div>`;
+    $("#coming-lists").innerHTML = "";
+    return;
+  }
+  const l = c.lead;
+  $("#coming-title").textContent = l.heading;
+  note.textContent =
+    l.tag === "now" ? (l.show.to.key === dayKey(t) ? `Until ${clock(l.show.to.H, l.show.to.M)}` : `Through ${shortDate(l.show.to)}`)
+    : l.tag === "weekend" ? DAYS[weekday(l.show.from.key)]
+    : l.tag === "next" && l.days > 1 ? `In ${l.days} days`
+    : "";
+  $("#lead").innerHTML = card(l.show, l.run, { lead: true });
+  renderComingLists(c);
+}
+
+function renderComingLists(c = comingUp(events, now())) {
+  $("#coming-lists").innerHTML = c
+    ? c.sections.map((s) => `<div class="shell sub"><h3 class="title">${esc(s.title)}</h3><ol class="rows">${s.runs.map((r) => row(r, { dated: true })).join("")}</ol></div>`).join("")
+    : "";
+}
+
+/* ------------------------------------------------------------- calendar --- */
+
+let filter = "";
+
+function renderCalendar() {
+  const rs = liveRuns();
+  const cs = chips(rs);
+  if (filter && !cs.some((c) => c.slug === filter)) filter = "";
+  const bar = $("#chips");
+  const scrolled = bar.scrollLeft;
+  bar.innerHTML = [["", "All"], ...cs.map((c) => [c.slug, c.name])]
+    .map(([slug, name]) => `<button type="button" class="chip" data-chip="${esc(slug)}" aria-pressed="${filter === slug}">${esc(name)}</button>`)
+    .join("");
+  bar.scrollLeft = scrolled;
+  const shown = filter ? rs.filter((r) => r.categories.some((c) => c.slug === filter)) : rs;
+  $("#cal-count").textContent = filter ? `${shown.length} of ${rs.length}` : "";
+  const ms = months(shown, now());
+  $("#months").innerHTML = ms.length
+    ? ms.map((m) => `<section class="month" aria-labelledby="m-${m.key}"><h3 class="title month-name" id="m-${m.key}">${esc(m.label)}</h3><ol class="rows">${m.runs.map((r) => row(r)).join("")}</ol></section>`).join("")
+    : `<p class="empty">Nothing coming up in that one right now.</p>`;
+}
+
+function pickChip(slug, { focus = false } = {}) {
+  filter = slug;
+  renderCalendar();
+  if (focus) $$("[data-chip]").find((b) => b.dataset.chip === slug)?.focus();
+}
+
+/* ---------------------------------------------------------- My Matthews --- */
+
+function renderSaved() {
+  const rs = liveRuns().filter(isSaved);
+  $("#saved-list").innerHTML = rs.length ? `<ol class="rows">${rs.map((r) => row(r, { dated: true })).join("")}</ol>` : "";
+  $("#saved-lede").textContent = rs.length
+    ? `${rs.length === 1 ? "One thing" : `${rs.length} things`} you've saved, soonest first. The list stays on this phone.`
+    : "Tap Save on anything and it waits for you here. The list stays on this phone. There's no account and nothing to sign up for.";
+  $("#nav-count").textContent = rs.length ? String(rs.length) : "";
+}
+
+/* ------------------------------------------- Visit, About, Get involved --- */
+
+function renderVisit() {
+  $("#visit-facts").innerHTML = D.facts.visit
+    .map((v) => {
+      const extra = [];
+      if (v.maps) extra.push(`<a href="${esc(v.maps)}" ${EXT}>Directions</a>`);
+      if (v.link) extra.push(`<a href="${esc(v.link.href)}" ${EXT}>${esc(v.link.text)}</a>`);
+      const value = v.tel ? `<a href="tel:${esc(v.tel)}">${esc(v.text)}</a>` : esc(v.text);
+      return `<div class="fact"><dt class="label">${esc(v.label)}</dt><dd>${value}</dd>${extra.map((x) => `<dd>${x}</dd>`).join("")}</div>`;
+    })
+    .join("");
+}
+
+function renderAbout() {
+  const A = D.facts.about;
+  $("#about").innerHTML = `
+    ${A.photo ? `<figure class="bleed">${frame(A.photo, "about-photo", "(min-width: 48rem) 47.938rem, 100vw")}</figure>` : ""}
+    <div class="shell about-body">
+      <h2 class="headline" id="about-title">${esc(A.title)}</h2>
+      ${A.paragraphs.map((p) => `<p>${esc(p)}</p>`).join("")}
+    </div>
+    <div class="numbers"><div class="shell">
+      <p class="numbers-head"><span class="title">${esc(A.numbers.tag)}</span><span class="headline">${esc(A.numbers.title)}</span></p>
+      <ol>${A.numbers.items.map(([n, what]) => `<li><span class="num">${esc(n)}</span><span class="num-label">${esc(what)}</span></li>`).join("")}</ol>
+    </div></div>
+    <div class="shell about-more"><a href="${esc(A.more.href)}" ${EXT}>${esc(A.more.text)}</a></div>`;
+}
+
+function renderInvolved() {
+  const I = D.facts.involved;
+  const onCalendar = new Set(chips(liveRuns()).map((c) => c.slug));
+  const way = (w) => {
+    const here = w.chip && onCalendar.has(w.chip); // upcoming auditions are in the Guide's own calendar
+    return `<a href="${esc(here ? "#calendar" : w.href)}" ${here ? `data-chip-go="${esc(w.chip)}"` : EXT}>
+      <span><span class="way-name">${esc(w.name)}</span><span class="way-text">${esc(w.text)}</span></span>
+      <span class="arrow" aria-hidden="true">${here ? "→" : "↗"}</span></a>`;
+  };
+  $("#involved").innerHTML = `<div class="shell">
+    <div class="section-head">
+      <h2 class="headline" id="involved-title">Get involved</h2>
+      <p class="title lede-title">${esc(I.title)}</p>
+      <p class="lede">${esc(I.intro)}</p>
+    </div>
+    <div class="ways">${I.ways.map(way).join("")}</div>
+    <div class="give">
+      <p class="title">${esc(I.give.title)}</p>
+      <p>${esc(I.give.text)}</p>
+      <div class="actions"><a class="readon" href="${esc(I.give.href)}" ${EXT}>${esc(I.give.button)}</a></div>
+    </div>
+    <div class="ways partners">${I.partners.map(way).join("")}</div>
+  </div>`;
+}
+
+function renderFooter() {
+  const f = D.facts.footer;
+  const at = zoned(checkedAt || Date.parse(D.built));
+  const stamp = `${shortDate({ m: at.m, d: at.d })}, ${clock(at.H, at.M)}`;
+  let pinned = "";
+  if (PINNED) {
+    const p = zoned(PINNED);
+    pinned = `Preview: the Guide as it looks ${DAYS_AP[p.dow]}, ${shortDate({ m: p.m, d: p.d })}, at ${clock(p.H, p.M)}`;
+  }
+  $("#foot").innerHTML = `<div class="shell">
+    <p class="foot-name">${esc(f.name)}</p>
+    <p>${esc(f.address)}</p>
+    <p><a class="nowrap" href="tel:${esc(f.phone.tel)}">${esc(f.phone.text)}</a></p>
+    <p class="muted">${esc(f.nonprofit)}</p>
+    <ul class="foot-links">
+      <li><a href="${esc(f.site)}" ${EXT}>matthewsopera.com</a></li>
+      <li><a href="${esc(f.site)}events/" ${EXT}>The full calendar</a></li>
+      ${f.social.map((s) => `<li><a href="${esc(s.href)}" ${EXT}>${esc(s.label)}</a></li>`).join("")}
+    </ul>
+    <p class="foot-built label">${checkedAt ? "Checked with our calendar" : "From our calendar as of"} ${esc(stamp)}</p>
+    ${pinned ? `<p class="foot-built">${esc(pinned)}</p>` : ""}
+  </div>`;
+}
+
+/* ------------------------------------------------------------ the sheet --- */
+
+const sheet = $("#sheet");
+let current = null;
+let pushed = false;
+let returnTo = null;
+const sheetOpen = () => !sheet.hidden;
+const outside = () => [$("header.bar"), $("main"), $("footer.foot"), $(".skip")].filter(Boolean);
+const keyFromHash = () => (location.hash.startsWith("#e/") ? decodeURIComponent(location.hash.slice(3)) : null);
+
+function sheetHTML(e) {
+  const run = runOf(e.key) || { title: e.title, shows: [e], key: e.key, categories: e.categories };
+  return `<div class="sheet-bar"><div class="shell"><button type="button" class="label" data-close><span aria-hidden="true">← </span>Back</button></div></div>${card(e, run)}`;
+}
+
+function openSheet(key, { push = true } = {}) {
+  const e = byKey(key);
+  if (!e) return false;
+  const already = sheetOpen();
+  if (!already) returnTo = document.activeElement;
+  if (push) {
+    const url = `${location.pathname}${location.search}#e/${key}`;
+    if (already) history.replaceState({ e: key }, "", url);
+    else { history.pushState({ e: key }, "", url); pushed = true; }
+  }
+  current = key;
+  sheet.innerHTML = sheetHTML(e);
+  sheet.hidden = false;
+  sheet.scrollTop = 0;
+  sheet.classList.remove("is-opening");
+  void sheet.offsetWidth;
+  sheet.classList.add("is-opening");
+  document.documentElement.classList.add("locked");
+  for (const el of outside()) el.inert = true;
+  $("#sheet-title", sheet)?.focus({ preventScroll: true });
+  document.title = `${e.title} · The Matthews Guide`;
+  return true;
+}
+
+function closeSheet({ fromHistory = false } = {}) {
+  if (!sheetOpen()) return;
+  sheet.hidden = true;
+  sheet.innerHTML = "";
+  current = null;
+  document.documentElement.classList.remove("locked");
+  for (const el of outside()) el.inert = false;
+  document.title = "The Matthews Guide";
+  if (!fromHistory) {
+    if (pushed) history.back();
+    else history.replaceState(null, "", location.pathname + location.search);
+  }
+  pushed = false;
+  if (returnTo && document.contains(returnTo)) returnTo.focus({ preventScroll: true });
+  returnTo = null;
+}
+
+/* ------------------------------------------------- calendar file, share --- */
+
+function downloadIcs(key) {
+  const e = byKey(key);
+  if (!e) return;
+  const url = URL.createObjectURL(new Blob([ics(e)], { type: "text/calendar;charset=utf-8" }));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${e.key.replace(/[^a-z0-9-]+/gi, "-")}.ics`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 30000);
+}
+
+const guideUrl = () => {
+  const u = new URL(location.href);
+  u.hash = "";
+  u.searchParams.delete("now");
+  return u.toString();
+};
+
+async function share(data) {
+  if (navigator.share) {
+    try { await navigator.share(data); return; } catch (err) { if (err && err.name === "AbortError") return; }
+  }
+  try { await navigator.clipboard.writeText(data.url); toast("Link copied"); } catch { toast("Copy the address bar to share"); }
+}
+const shareGuide = () => share({ title: "The Matthews Guide", text: "What's on at the Matthews Opera House in Spearfish.", url: guideUrl() });
+function shareEvent(key) {
+  const e = byKey(key);
+  if (e) share({ title: e.title, text: `${e.title} at the Matthews, ${whenShort(e)}.`, url: e.url });
+}
+
+let toastTimer = 0;
+function toast(msg) {
+  const el = $("#toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("show"), 2400);
+}
+
+/* ---------------------------------------------------------- live feed --- */
+
+let refreshing = false;
+const signature = (list) => JSON.stringify(list.map((e) => [e.key, e.start, e.end, e.title, e.price, e.ticket.url, e.blurb, e.image && e.image.src, e.venue && e.venue.name, e.categories.map((c) => c.slug).join()]));
+
+async function refresh() {
+  if (refreshing || navigator.onLine === false) return;
+  refreshing = true;
+  try {
+    const all = [];
+    for (let page = 1, pages = 1; page <= pages && page <= 20; page++) {
+      const ctl = new AbortController();
+      const timer = setTimeout(() => ctl.abort(), 15000);
+      let res;
+      try {
+        res = await fetch(`${D.feed}?start_date=${dayKey(now())}&per_page=50&page=${page}`, { signal: ctl.signal, credentials: "omit", cache: "no-store" });
+      } finally {
+        clearTimeout(timer);
+      }
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const j = await res.json();
+      if (!Array.isArray(j.events)) throw new Error("no events list");
+      all.push(...j.events);
+      pages = Number(j.total_pages) || 1;
+    }
+    const next = normalize(all).events;
+    if (!next.length && live().length) throw new Error("an empty answer"); // never blank the Guide on a bad read
+    checkedAt = Date.now();
+    if (signature(next) !== signature(events)) {
+      events = next;
+      if (!PINNED) {
+        // A saved date the calendar no longer lists has passed, or was taken down.
+        const keys = new Set(events.map((e) => e.key));
+        for (const k of [...saved]) if (!keys.has(k)) saved.delete(k);
+        store.set([...saved]);
+      }
+      redraw();
+    }
+    renderFooter();
+  } catch {
+    /* no signal, or the site is down: the snapshot stands */
+  } finally {
+    refreshing = false;
+  }
+}
+
+function redraw() {
+  lastState = "";
+  tick();
+  renderInvolved();
+  if (sheetOpen() && current) {
+    const e = byKey(current);
+    if (!e) return closeSheet();
+    const top = sheet.scrollTop;
+    sheet.innerHTML = sheetHTML(e);
+    sheet.scrollTop = top;
+  }
+}
+
+/* Redraw Coming up and the calendar only when what's on has actually
+   changed, so a finger mid-tap never loses its target. */
+function tick() {
+  const t = now();
+  const c = comingUp(events, t);
+  const state = JSON.stringify([c && c.lead.show.key, c && c.lead.tag, c && c.lead.days, c && c.sections.map((s) => [s.id, s.runs.map((r) => r.shows.map((e) => e.key))]), live().map((e) => e.key)]);
+  if (state === lastState) return;
+  lastState = state;
+  renderComingUp();
+  renderCalendar();
+  renderSaved();
+}
+
+/* ------------------------------------------------------------- the bar --- */
+
+function measureBar() {
+  document.documentElement.style.setProperty("--bar", `${$("header.bar").offsetHeight}px`);
+}
+
+const SECTIONS = ["coming-up", "calendar", "saved", "visit", "about", "involved"];
+function spy() {
+  const line = $("header.bar").offsetHeight + 24;
+  let active = SECTIONS[0];
+  for (const id of SECTIONS) {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top <= line) active = id;
+  }
+  if (scrollY > 0 && innerHeight + scrollY >= document.documentElement.scrollHeight - 4) active = SECTIONS[SECTIONS.length - 1];
+  for (const a of $$(".nav a")) {
+    if (a.getAttribute("href") === `#${active}`) a.setAttribute("aria-current", "true");
+    else a.removeAttribute("aria-current");
+  }
+  const cur = $('.nav a[aria-current="true"]');
+  const nav = $(".nav");
+  if (cur && nav.scrollWidth > nav.clientWidth) {
+    const l = cur.offsetLeft - nav.firstElementChild.offsetLeft;
+    if (l < nav.scrollLeft || l + cur.offsetWidth > nav.scrollLeft + nav.clientWidth - 24) nav.scrollTo({ left: Math.max(0, l - 20) });
+  }
+}
+
+/* -------------------------------------------------------------- events --- */
+
+document.addEventListener("click", (ev) => {
+  const t = ev.target.closest("[data-open],[data-save],[data-ics],[data-share-event],[data-share],[data-chip],[data-chip-go],[data-close]");
+  if (!t) return;
+  if (t.matches("[data-close]")) return closeSheet();
+  if (t.matches("[data-save]")) return toggleSave(t.dataset.save);
+  if (t.matches("[data-ics]")) return downloadIcs(t.dataset.ics);
+  if (t.matches("[data-share-event]")) return shareEvent(t.dataset.shareEvent);
+  if (t.matches("[data-share]")) return shareGuide();
+  if (t.matches("[data-chip]")) return pickChip(t.dataset.chip, { focus: true });
+  if (t.matches("[data-chip-go]")) {
+    ev.preventDefault();
+    pickChip(t.dataset.chipGo);
+    document.getElementById("calendar").scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth" });
+    return;
+  }
+  if (t.matches("[data-open]")) {
+    if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
+    ev.preventDefault();
+    openSheet(t.dataset.open);
+  }
+});
+
+document.addEventListener("keydown", (ev) => {
+  if (ev.key === "Escape" && sheetOpen()) closeSheet();
+});
+
+window.addEventListener("popstate", () => {
+  const key = keyFromHash();
+  if (key && byKey(key)) openSheet(key, { push: false });
+  else closeSheet({ fromHistory: true });
+});
+
+let raf = 0;
+window.addEventListener("scroll", () => {
+  if (raf) return;
+  raf = requestAnimationFrame(() => { raf = 0; spy(); });
+}, { passive: true });
+
+let resizeTimer = 0;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => { measureBar(); spy(); }, 120);
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) return;
+  tick();
+  if (!checkedAt || Date.now() - checkedAt > 5 * 60000) refresh();
+});
+
+/* --------------------------------------------------------------- start --- */
+
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+tick();
+renderVisit();
+renderAbout();
+renderInvolved();
+renderFooter();
+measureBar();
+spy();
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { measureBar(); spy(); });
+
+const first = keyFromHash();
+if (first) {
+  if (!openSheet(first, { push: false })) history.replaceState(null, "", location.pathname + location.search);
+} else if (location.hash && document.getElementById(location.hash.slice(1))) {
+  // A link to a section (…#visit). Aim again once the fonts arrive: the text
+  // above reflows when larken replaces Georgia, which moves the target.
+  const target = document.getElementById(location.hash.slice(1));
+  let moved = false;
+  for (const type of ["wheel", "touchstart", "keydown"]) addEventListener(type, () => { moved = true; }, { once: true, passive: true });
+  const aim = () => { if (!moved) target.scrollIntoView({ behavior: "instant" }); };
+  requestAnimationFrame(aim);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => requestAnimationFrame(aim));
+}
+
+setTimeout(refresh, 400);
+if (!PINNED) setInterval(tick, 60000);
+
+})();
+</script>
+</body>
+</html>

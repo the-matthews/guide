@@ -1,0 +1,22 @@
+{
+  "name": "The Matthews Guide",
+  "short_name": "The Matthews",
+  "description": "What's on at the Matthews Opera House & Arts Center in Spearfish, South Dakota: tonight, this weekend and the months ahead, straight from our calendar.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "browser",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
